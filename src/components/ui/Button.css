@@ -1,0 +1,79 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.btn:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Variants - Colors now handled by Tailwind in Button.tsx */
+.btn-primary {
+    transition: all 0.2s;
+}
+
+.btn-secondary {
+    transition: all 0.2s;
+}
+
+.btn-destructive {
+    transition: all 0.2s;
+}
+
+.btn-outline {
+    transition: all 0.2s;
+}
+
+.btn-ghost {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.btn-ghost:hover {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+}
+
+/* Sizes */
+.btn-sm {
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    font-size: 0.75rem;
+}
+
+.btn-md {
+    height: 2.5rem;
+    padding: 0 1rem;
+}
+
+.btn-lg {
+    height: 2.75rem;
+    padding: 0 2rem;
+    font-size: 1rem;
+}
+
+.btn-icon {
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 0;
+}
+
+.btn-full {
+    width: 100%;
+}

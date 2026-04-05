@@ -1,0 +1,26 @@
+[
+  {
+    "appointment_id": "df50c3db-709f-4227-a8c5-bbaf1a9b0bf9",
+    "appointment_status": "SCHEDULED",
+    "ticket": "040126004",
+    "request_status": "SCHEDULED"
+  },
+  {
+    "appointment_id": "90745573-0486-4fea-bbcd-a030c6db65f2",
+    "appointment_status": "SCHEDULED",
+    "ticket": "040126003",
+    "request_status": "CANCELED"
+  },
+  {
+    "appointment_id": "71c82d4d-955b-4f51-bc87-96d3160301e3",
+    "appointment_status": "CANCELED",
+    "ticket": "040126002",
+    "request_status": "DECLINED"
+  },
+  {
+    "appointment_id": "54f658f8-d4c3-4476-9bd2-31ae0df48d3b",
+    "appointment_status": "CANCELED",
+    "ticket": "040126001",
+    "request_status": "CANCELED"
+  }
+]

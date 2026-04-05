@@ -1,0 +1,18 @@
+
+ --- checklist_templates --- 
+Columns: ["id","code","name","description","is_active","created_at","updated_at"]
+
+ --- checklist_template_items --- 
+Columns: ["id","template_id","section_id","item_text","sort_order","severity_hint","requires_photo","tool_hint","is_active","created_at"]
+
+ --- checklist_template_sections --- 
+Columns: ["id","template_id","code","title","sort_order","is_active","created_at"]
+
+ --- service_template_rules --- 
+Columns: ["id","service_catalog_id","template_id","priority","is_default","is_active","created_at"]
+
+ --- inspection_checklists --- 
+Columns: ["id","name","description","created_at","template_version_id","findings","recommendations","risk","status","tech_user_id","request_id","appointment_id","template_id"]
+
+ --- checklist_items --- 
+Columns: ["id","checklist_id","category","item_name","critical","order_index","created_at","notes","status","severity_hint","requires_photo","tool_hint","template_section_id","template_item_id","photo_urls"]

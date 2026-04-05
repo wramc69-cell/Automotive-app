@@ -1,0 +1,36 @@
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.table-header {
+    border-bottom: 1px solid hsl(var(--border));
+}
+
+.table-row {
+    border-bottom: 1px solid hsl(var(--border));
+    transition: background-color 0.2s;
+}
+
+.table-row:hover {
+    background-color: hsl(var(--muted));
+}
+
+.table-head {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    white-space: nowrap;
+}
+
+.table-cell {
+    padding: 0.75rem 1rem;
+    color: hsl(var(--foreground));
+}

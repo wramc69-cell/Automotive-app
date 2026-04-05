@@ -1,0 +1,223 @@
+{
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\lib\\notifications.ts": {
+    "errors": 2,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminCatalogPage.tsx": {
+    "errors": 4,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-unused-vars: 'CardHeader' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'CardTitle' is defined but never used.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminConfigPage.tsx": {
+    "errors": 3,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminNotificationsPage.tsx": {
+    "errors": 4,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/immutability: Error: Cannot access variable before it is declared\n\n`loadNotifications` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.\n\nC:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminNotificationsPage.tsx:22:9\n  20 |\n  21 |     useEffect(() => {\n> 22 |         loadNotifications();\n     |         ^^^^^^^^^^^^^^^^^ `loadNotifications` accessed before it is declared\n  23 |     }, []);\n  24 |\n  25 |     async function loadNotifications() {\n\nC:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminNotificationsPage.tsx:25:5\n  23 |     }, []);\n  24 |\n> 25 |     async function loadNotifications() {\n     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n> 26 |         setLoading(true);\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 27 |         const { data } = await supabase\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 28 |             .from('notifications_outbox')\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 29 |             .select('*')\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 30 |             .order('created_at', { ascending: false });\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 31 |         setNotifications(data || []);\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 32 |         setLoading(false);\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 33 |     }\n     | ^^^^^^ `loadNotifications` is declared here\n  34 |\n  35 |     async function processQueue() {\n  36 |         setProcessing(true);",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminRequestDetailPage.tsx": {
+    "errors": 5,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-unused-vars: 'CheckCircle' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'XCircle' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'Clock' is defined but never used.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/exhaustive-deps: React Hook useEffect has a missing dependency: 'loadDetail'. Either include it or remove the dependency array."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminRequestsPage.tsx": {
+    "errors": 5,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-unused-vars: 'CardTitle' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'Eye' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'User' is defined but never used.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/immutability: Error: Cannot access variable before it is declared\n\n`loadRequests` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.\n\nC:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminRequestsPage.tsx:20:9\n  18 |\n  19 |     useEffect(() => {\n> 20 |         loadRequests();\n     |         ^^^^^^^^^^^^ `loadRequests` accessed before it is declared\n  21 |     }, [filterStatus]);\n  22 |\n  23 |     async function loadRequests() {\n\nC:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminRequestsPage.tsx:23:5\n  21 |     }, [filterStatus]);\n  22 |\n> 23 |     async function loadRequests() {\n     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n> 24 |         setLoading(true);\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 25 |         let query = supabase\n     …\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 36 |         setLoading(false);\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 37 |     }\n     | ^^^^^^ `loadRequests` is declared here\n  38 |\n  39 |     const filtered = requests.filter(r =>\n  40 |         r.profiles?.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||",
+      "react-hooks/exhaustive-deps: React Hook useEffect has a missing dependency: 'loadRequests'. Either include it or remove the dependency array."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\AdminTechsPage.tsx": {
+    "errors": 7,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-unused-vars: 'CardHeader' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'CardTitle' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'UserMinus' is defined but never used.",
+      "@typescript-eslint/no-unused-vars: 'Settings2' is defined but never used.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-unused-vars: 'unassignTech' is defined but never used."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\admin\\DashboardPage.tsx": {
+    "errors": 6,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\auth\\LoginPage.tsx": {
+    "errors": 2,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\auth\\RegisterPage.tsx": {
+    "errors": 1,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\ChatbotPage.tsx": {
+    "errors": 5,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/exhaustive-deps: React Hook useEffect has missing dependencies: 'addBotMessage' and 'askVehicle'. Either include them or remove the dependency array.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\DashboardPage.tsx": {
+    "errors": 4,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/immutability: Error: Cannot access variable before it is declared\n\n`loadData` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.\n\nC:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\DashboardPage.tsx:17:19\n  15 |\n  16 |     useEffect(() => {\n> 17 |         if (user) loadData();\n     |                   ^^^^^^^^ `loadData` accessed before it is declared\n  18 |     }, [user]);\n  19 |\n  20 |     async function loadData() {\n\nC:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\DashboardPage.tsx:20:5\n  18 |     }, [user]);\n  19 |\n> 20 |     async function loadData() {\n     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n> 21 |         setLoading(true);\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 22 |         const [reqRes, vehRes] = await Promise.all([\n     …\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 38 |         setLoading(false);\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^\n> 39 |     }\n     | ^^^^^^ `loadData` is declared here\n  40 |\n  41 |     const active = requests.filter(r => !['COMPLETED', 'CANCELED', 'DECLINED'].includes(r.status));\n  42 |     const completed = requests.filter(r => r.status === 'COMPLETED');",
+      "react-hooks/exhaustive-deps: React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\OnboardingPage.tsx": {
+    "errors": 2,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\ProfilePage.tsx": {
+    "errors": 1,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\RequestDetailPage.tsx": {
+    "errors": 9,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/exhaustive-deps: React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-unused-vars: 'err' is defined but never used.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\RequestsPage.tsx": {
+    "errors": 2,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/exhaustive-deps: React Hook useEffect has a missing dependency: 'loadRequests'. Either include it or remove the dependency array.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\SchedulePage.tsx": {
+    "errors": 4,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\customer\\VehiclesPage.tsx": {
+    "errors": 7,
+    "warnings": 0,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-unused-vars: 'error' is defined but never used.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\tech\\RequestDetailPage.tsx": {
+    "errors": 16,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/exhaustive-deps: React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-unused-vars: 'err' is defined but never used.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  },
+  "C:\\Users\\Alejandra Torres\\OneDrive\\Taller-Denver\\Automotive\\src\\pages\\tech\\RequestsPage.tsx": {
+    "errors": 4,
+    "warnings": 1,
+    "messages": [
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type.",
+      "react-hooks/exhaustive-deps: React Hook useEffect has a missing dependency: 'loadAppointments'. Either include it or remove the dependency array.",
+      "@typescript-eslint/no-explicit-any: Unexpected any. Specify a different type."
+    ]
+  }
+}

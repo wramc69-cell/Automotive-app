@@ -1,0 +1,1 @@
+﻿{"id":"203e07b8-5b37-456f-bfbd-27f7e43ea69b","make":"Ford","trim":"XLT","year":2015,"model":"Explorer","notes":"No recuerdo la ├║ltima vez que se realiz├│ cambio de Aceite","org_id":null,"odometer":200000,"created_at":"2026-03-30T21:53:32.523715+00:00","powertrain":"GAS","updated_at":"2026-04-03T15:01:27.803817+00:00","owner_user_id":"58321a1c-9ee1-4ff4-977a-049afc8576b4"}
