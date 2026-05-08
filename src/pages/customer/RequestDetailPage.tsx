@@ -7,12 +7,32 @@ import { Input } from '../../components/ui/Input';
 import {
     ArrowLeft, Download, Calendar,
     FileText, Zap, MapPin, Wrench, ShieldCheck,
-    Clock, Check, X, Shield
+    Clock, Check, X, Shield, Activity, Camera, ExternalLink, AlertTriangle
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../components/ui/Toast';
 import { TermsModal } from '../../components/ui/TermsModal';
+
+const STATUS_LABEL: Record<string, string> = {
+    'SUBMITTED': 'SOLICITADO',
+    'SCHEDULED': 'PROGRAMADO',
+    'DIAGNOSED': 'DIAGNOSTICADO',
+    'QUOTED': 'PRESUPUESTADO',
+    'APPROVED': 'APROBADO',
+    'COMPLETED': 'COMPLETADO',
+    'CANCELED': 'CANCELADO',
+    'DECLINED': 'RECHAZADO'
+};
+
+const STAGES = [
+    { id: 'SUBMITTED', label: 'Solicitado', description: 'Recepción' },
+    { id: 'SCHEDULED', label: 'Asignado', description: 'Técnico Ok' },
+    { id: 'DIAGNOSED', label: 'Análisis', description: 'Diagnóstico' },
+    { id: 'QUOTED', label: 'Presupuesto', description: 'Aprobación' },
+    { id: 'APPROVED', label: 'En Curso', description: 'Reparación' },
+    { id: 'COMPLETED', label: 'Finalizado', description: 'Entregado' }
+];
 
 export function RequestDetailPage() {
     const { id: requestId } = useParams();
@@ -65,7 +85,6 @@ export function RequestDetailPage() {
                 setResults(resData || []);
             }
 
-            // Fetch Quote
             const { data: qData } = await supabase
                 .from('quotes')
                 .select('*, quote_items(*)')
@@ -86,7 +105,6 @@ export function RequestDetailPage() {
 
         setSubmitting(true);
         try {
-            // 1. Create Approval Record
             const { error: appError } = await supabase
                 .from('quote_approvals')
                 .insert({
@@ -99,13 +117,10 @@ export function RequestDetailPage() {
 
             if (appError) throw appError;
 
-            // Trigger will handle quote and request status updates to 'APPROVED'
-
-            // 2. Notification
             await supabase.from('notifications_outbox').insert({
                 recipient_user_id: user.id,
                 recipient: user.email || '',
-                channel: 'EMAIL', // Customer usually gets confirmation on email
+                channel: 'EMAIL',
                 template_code: 'QUOTE_APPROVED',
                 payload: {
                     data: {
@@ -116,11 +131,10 @@ export function RequestDetailPage() {
                 status: 'PENDING'
             });
 
-            toast({ title: 'Presupuesto Aprobado', description: 'El técnico comenzará con la reparación.', type: 'success' });
+            toast({ title: 'Protocolo Autorizado', description: 'El despliegue técnico ha comenzado.', type: 'success' });
             loadData();
         } catch (err: any) {
-            console.error('Error approving:', err);
-            toast({ title: 'Error', description: 'No se pudo procesar la aprobación.', type: 'error' });
+            toast({ title: 'Falla de Autorización', description: 'No se pudo procesar la firma digital.', type: 'error' });
         } finally {
             setSubmitting(false);
         }
@@ -128,15 +142,13 @@ export function RequestDetailPage() {
 
     const handleRejectQuote = async () => {
         if (!quote || !user) return;
-        const reason = window.prompt('Por favor, cuéntanos el motivo del rechazo (opcional):');
+        const reason = window.prompt('Por favor, indique el motivo de rechazo técnico:');
 
         setSubmitting(true);
         try {
-            // 1. Update Status
             await supabase.from('quotes').update({ status: 'DECLINED' }).eq('id', quote.id);
             await supabase.from('service_requests').update({ status: 'DECLINED' }).eq('id', requestId);
 
-            // 2. Notification
             await supabase.from('notifications_outbox').insert({
                 recipient_user_id: user.id,
                 recipient: user.email || '',
@@ -152,363 +164,453 @@ export function RequestDetailPage() {
                 status: 'PENDING'
             });
 
-            toast({ title: 'Presupuesto Rechazado', description: 'Lamentamos que no podamos proceder en esta ocasión.', type: 'info' });
+            toast({ title: 'Misión Abortada', description: 'El presupuesto ha sido rechazado por el operador.', type: 'info' });
             loadData();
         } catch (err) {
-            toast({ title: 'Error', type: 'error' });
+            toast({ title: 'Falla de Sistema', type: 'error' });
         } finally {
             setSubmitting(false);
         }
     };
 
     const handleCancelRequest = async () => {
-        if (!window.confirm('¿Estás seguro de que deseas cancelar este servicio? Esta acción no se puede deshacer.')) return;
+        if (!window.confirm('¿Efectuar comando de CANCELACIÓN? Esta acción cerrará el expediente operativo.')) return;
 
         setSubmitting(true);
         try {
-            // Cancel Request
             await supabase.from('service_requests').update({ status: 'CANCELED' }).eq('id', requestId);
-
-            // Cancel Appointments related
             await supabase.from('appointments').update({ status: 'CANCELED' }).eq('request_id', requestId);
 
-            toast({ title: 'Servicio Cancelado', description: 'Tu solicitud ha sido cancelada exitosamente.', type: 'info' });
+            toast({ title: 'Expediente Cerrado', description: 'La solicitud ha sido eliminada de la cola activa.', type: 'info' });
             loadData();
         } catch (err: any) {
-            console.error('Error cancelling:', err);
-            toast({ title: 'Error', description: 'No se pudo cancelar el servicio.', type: 'error' });
+            toast({ title: 'Falla Técnica', description: 'No se pudo cancelar el servicio.', type: 'error' });
         } finally {
             setSubmitting(false);
         }
     };
 
-    const getTimeline = () => {
-        const stages = [
-            { id: 'SUBMITTED', label: 'Solicitado', description: 'Recepción inicial' },
-            { id: 'SCHEDULED', label: 'Programado', description: 'Técnico asignado' },
-            { id: 'DIAGNOSED', label: 'Diagnosticado', description: 'Revisión técnica' },
-            { id: 'QUOTED', label: 'Presupuestado', description: 'Esperando aprobación' },
-            { id: 'APPROVED', label: 'Aprobado', description: 'En reparación' },
-            { id: 'COMPLETED', label: 'Completado', description: '¡Listo!' }
-        ];
-
-        // Custom index finder
-        const currentIdx = stages.findIndex(s => s.id === request?.status);
-        const isCanceled = request?.status === 'CANCELED';
-        const isDeclined = request?.status === 'DECLINED';
-
-        return (
-            <div className="flex justify-between items-center mb-10 overflow-x-auto pb-4 gap-4 px-2">
-                {stages.map((stage, idx) => {
-                    const isActive = idx <= currentIdx;
-                    const isCurrent = idx === currentIdx;
-
-                    return (
-                        <div key={stage.id} className="flex flex-col items-center min-w-[80px] text-center relative">
-                            {idx > 0 && (
-                                <div className={`absolute top-4 right-1/2 w-full h-[2px] -z-10 ${idx <= currentIdx ? 'bg-primary' : 'bg-slate-200'}`} style={{ width: 'calc(100% + 2rem)', right: '50%' }}></div>
-                            )}
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${isCurrent ? 'bg-primary border-primary text-white scale-110 shadow-lg shadow-primary/20' :
-                                isActive ? 'bg-primary/10 border-primary text-primary' :
-                                    'bg-white border-slate-200 text-slate-300'
-                                }`}>
-                                {isActive && !isCurrent ? <Check size={14} /> : <span>{idx + 1}</span>}
-                            </div>
-                            <span className={`text-[10px] font-bold mt-2 uppercase tracking-tight ${isActive ? 'text-slate-800' : 'text-slate-400'}`}>
-                                {stage.label}
-                            </span>
-                        </div>
-                    );
-                })}
-                {(isCanceled || isDeclined) && (
-                    <div className="flex flex-col items-center min-w-[80px] text-center">
-                        <div className="w-8 h-8 rounded-full bg-destructive border-2 border-destructive text-white flex items-center justify-center">
-                            <X size={14} />
-                        </div>
-                        <span className="text-[10px] font-bold mt-2 uppercase text-destructive tracking-tight">
-                            {isCanceled ? 'CANCELADO' : 'RECHAZADO'}
-                        </span>
-                    </div>
-                )}
-            </div>
-        );
-    };
-
-    if (loading) return <div className="p-20 text-center">Cargando detalles...</div>;
-    if (!request) return <div className="p-20 text-center text-muted-foreground">No se encontró la solicitud.</div>;
+    if (loading) return <div className="p-32 text-center text-primary font-black animate-pulse">SINCRONIZANDO TERMINAL...</div>;
+    if (!request) return <div className="p-32 text-center text-slate-400 font-black">EXPEDIENTE NO LOCALIZADO</div>;
 
     const categories = Array.from(new Set(results.map(r => r.checklist_items?.category)));
     const allPhotos = results.reduce((acc: string[], curr) => [...acc, ...(curr.photo_urls || [])], []);
 
     return (
-        <div className="max-w-5xl mx-auto space-y-6 animate-in pb-20 px-4">
-            <Link to="/app/requests" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
-                <ArrowLeft size={16} className="mr-1" /> Volver a mis servicios
-            </Link>
-
-            <div className="flex justify-between items-start flex-wrap gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold flex items-center gap-3">
-                        {request.vehicles?.year} {request.vehicles?.make} {request.vehicles?.model}
-                        <Badge variant={request.status === 'APPROVED' ? 'success' : request.status === 'QUOTED' ? 'warning' : 'outline'}>
-                            {request.status.replace('_', ' ')}
-                        </Badge>
-                    </h1>
-                    <p className="text-muted-foreground mt-1 flex items-center gap-2">
-                        <Wrench size={14} /> {request.service_catalog?.name} • Ticket ID: <span className="font-bold text-primary italic">#{request.ticket_number || 'S/N'}</span>
-                    </p>
-                </div>
+        <div className="space-y-8 pb-16 animate-in fade-in slide-in-from-bottom-4 duration-1000 font-inter max-w-[1400px] mx-auto px-4 md:px-8">
+            
+            {/* Action Bar: Tactical Navigation */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <Link to="/app/requests" className="group flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 hover:text-primary transition-all duration-300 italic">
+                    <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/5 transition-all">
+                        <ArrowLeft size={16} />
+                    </div>
+                    VOLVER AL LISTADO OPERATIVO
+                </Link>
                 {inspection?.status === 'COMPLETED' && (
-                    <Button variant="outline" onClick={() => window.print()}>
-                        <Download size={16} className="mr-2" /> Descargar Reporte
+                    <Button variant="outline" size="lg" onClick={() => window.print()} className="h-12 rounded-xl px-6 font-black text-[10px] tracking-[0.4em] uppercase border-slate-100 bg-white hover:bg-slate-950 hover:text-white transition-all shadow-md shadow-slate-100">
+                        <Download size={16} className="mr-3" /> DESCARGAR REPORTE 1.0X
                     </Button>
                 )}
             </div>
 
-            {getTimeline()}
+            {/* Inmersive Header: Mission Header */}
+            <section className="relative group">
+                <div className="absolute inset-0 bg-primary/10 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none transition-all duration-1000 group-hover:bg-primary/20"></div>
+                <div className="relative z-10 bg-slate-950 rounded-3xl p-8 md:p-12 overflow-hidden border border-white/5 shadow-3xl shadow-slate-950/20">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-bl-[15rem] pointer-events-none group-hover:scale-110 transition-transform duration-1000"></div>
+                    
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="space-y-6 text-center md:text-left">
+                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                                <Badge className={`px-6 py-2 text-[9px] font-black uppercase tracking-[0.4em] italic rounded-full border-none shadow-sm ${
+                                    request.status === 'APPROVED' || request.status === 'COMPLETED' ? 'bg-emerald-500 text-white' : 
+                                    request.status === 'QUOTED' ? 'bg-amber-500 text-white animate-pulse' : 
+                                    request.status === 'CANCELED' || request.status === 'DECLINED' ? 'bg-rose-500 text-white' :
+                                    'bg-primary text-white'
+                                }`}>
+                                    {STATUS_LABEL[request.status] || request.status}
+                                </Badge>
+                                <span className="text-[9px] font-black text-slate-500 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 uppercase tracking-[0.5em] italic">
+                                    LOG_ID: #{request.ticket_number || request.id.slice(0,8).toUpperCase()}
+                                </span>
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-[0.8] text-white">
+                                {request.vehicles?.make}<br />
+                                <span className="text-primary italic transition-colors duration-1000 group-hover:text-white uppercase">{request.vehicles?.model}</span>
+                            </h1>
+                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-6">
+                                <p className="text-slate-400 font-black uppercase tracking-[0.5em] text-[9px] flex items-center gap-3 italic opacity-80">
+                                    <Wrench size={14} className="text-primary" /> {request.service_catalog?.name || 'DESPLIEGUE GENERAL'}
+                                </p>
+                                <p className="text-slate-400 font-black uppercase tracking-[0.5em] text-[9px] flex items-center gap-3 italic opacity-80">
+                                    <Calendar size={14} className="text-primary" /> {new Date(request.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }).toUpperCase()}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div className="relative group/photo shrink-0 hidden md:block">
+                            <div className="absolute -inset-4 bg-primary/20 blur-xl rounded-full opacity-0 group-hover/photo:opacity-100 transition-opacity"></div>
+                            <div className="w-32 h-32 bg-white/5 rounded-3xl flex items-center justify-center text-primary text-4xl font-black shadow-2xl border-2 border-white/5 italic rotate-3 group-hover/photo:rotate-0 transition-all duration-700">
+                                <Zap size={48} fill="currentColor" className="animate-pulse" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Tracking Terminal: Unified Progress */}
+            <section className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-50 transition-all hover:shadow-primary/5">
+                 <div className="flex items-center justify-between gap-4 overflow-x-auto pb-6 scrollbar-hide px-2">
+                    {STAGES.map((stage, idx) => {
+                        const currentIdx = STAGES.findIndex(s => s.id === request?.status);
+                        const isActive = idx <= currentIdx;
+                        const isCurrent = idx === currentIdx;
 
-                {/* Main Content: Quote/Diagnosis & Checklist */}
-                <div className="lg:col-span-2 space-y-6">
+                        return (
+                            <div key={stage.id} className="flex flex-col items-center min-w-[100px] relative group/stage">
+                                {idx < STAGES.length - 1 && (
+                                    <div className={`absolute top-6 left-1/2 w-full h-[3px] -z-0 transition-all duration-1000 ${idx < currentIdx ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]' : 'bg-slate-100'}`}></div>
+                                )}
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-700 z-10 ${
+                                    isCurrent ? 'bg-slate-950 border-primary text-primary scale-110 shadow-lg shadow-primary/20 rotate-6 group-hover/stage:rotate-0' :
+                                    isActive ? 'bg-primary border-primary text-white shadow-md shadow-primary/10' :
+                                    'bg-white border-slate-100 text-slate-200'
+                                }`}>
+                                    {isActive && !isCurrent ? <Check size={20} strokeWidth={4} /> : 
+                                     isCurrent ? <Activity size={20} className="animate-pulse" /> :
+                                     <span className="text-lg font-black italic">{idx + 1}</span>}
+                                </div>
+                                <div className="mt-4 text-center space-y-1">
+                                    <p className={`text-[10px] font-black uppercase tracking-[0.4em] italic transition-colors leading-none ${isActive ? 'text-slate-950' : 'text-slate-300'}`}>
+                                        {stage.label}
+                                    </p>
+                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none border-t border-slate-100 pt-1">{stage.description}</p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                 </div>
+                 
+                 { (request?.status === 'CANCELED' || request?.status === 'DECLINED') && (
+                    <div className="mt-8 p-6 bg-rose-50 rounded-2xl flex flex-col md:flex-row items-center gap-6 border-2 border-rose-100 border-dashed animate-in slide-in-from-top duration-700">
+                        <div className="w-16 h-16 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-200 shrink-0 border-4 border-white">
+                            <X size={32} strokeWidth={4} />
+                        </div>
+                        <div className="text-center md:text-left space-y-1">
+                            <h4 className="font-black text-rose-900 uppercase italic tracking-tighter text-2xl leading-none">EXPEDIENTE BLOQUEADO</h4>
+                            <p className="text-rose-600/80 font-black text-[10px] uppercase tracking-[0.3em] italic">Misión abortada por {request?.status === 'CANCELED' ? 'EL OPERADOR' : 'PROTOCOLO TÉCNICO'}. Contacto de seguridad disponible.</p>
+                        </div>
+                    </div>
+                 )}
+            </section>
 
-                    {/* Action Required: Quote Approval */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+                <div className="lg:col-span-3 space-y-8">
+                    
+                    {/* Mission Authorization: Quote Terminal */}
                     {quote && quote.status === 'SENT' && (
-                        <Card className="border-2 border-warning shadow-lg bg-warning/5 overflow-hidden animate-pulse-subtle">
-                            <CardHeader className="bg-warning/10 border-b border-warning/20">
-                                <CardTitle className="flex items-center gap-2 text-warning-foreground">
-                                    <Zap size={20} /> Acción Requerida: Autorizar Reparación
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="p-4 bg-white rounded-lg border border-warning/20">
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Total del Presupuesto</p>
-                                        <p className="text-3xl font-bold text-primary">${quote.grand_total.toFixed(2)}</p>
+                        <Card className="border-none shadow-lg shadow-amber-200/20 bg-white rounded-3xl overflow-hidden animate-in zoom-in duration-700">
+                            <div className="bg-amber-400 p-8 md:p-12 text-slate-950 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-full bg-slate-950/5 pointer-events-none" />
+                                <div className="space-y-4 relative z-10">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center text-amber-400 shadow-md">
+                                            <Zap size={20} />
+                                        </div>
+                                        <span className="text-[10px] font-black text-slate-800 uppercase tracking-[0.4em] italic leading-none">Mission_Ready</span>
                                     </div>
-                                    <div className="p-4 bg-white rounded-lg border border-warning/20">
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Tiempo Estimado (ETA)</p>
-                                        <p className="text-xl font-bold flex items-center gap-2">
-                                            <Clock size={18} className="text-primary" />
-                                            {quote.eta_hours_min}-{quote.eta_hours_max} Horas
+                                    <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter leading-[0.8]">AUTORIZAR <br /><span className="opacity-60 italic">DESPLIEGUE</span></h2>
+                                </div>
+                                <div className="text-center md:text-right relative z-10">
+                                    <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.3em] italic mb-2 leading-none">TOTAL OPERATIVO_</p>
+                                    <span className="text-6xl md:text-7xl font-black italic tracking-tighter leading-none">${quote.grand_total.toFixed(0)}<span className="text-2xl opacity-40">.{quote.grand_total.toFixed(2).split('.')[1]}</span></span>
+                                </div>
+                            </div>
+                            
+                            <CardContent className="p-8 md:p-12 space-y-12">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="p-8 bg-slate-50/50 rounded-[2rem] border border-slate-100 shadow-inner group hover:bg-white transition-all duration-500">
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className="w-12 h-12 rounded-2xl bg-amber-400/10 flex items-center justify-center text-amber-600 group-hover:rotate-12 transition-transform">
+                                                <Clock size={24} />
+                                            </div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] italic">TIEMPO ESTIMADO (ETA)</p>
+                                        </div>
+                                        <p className="text-4xl font-black text-slate-950 italic tracking-tighter leading-none">
+                                            {quote.eta_hours_min}<span className="text-primary italic">-</span>{quote.eta_hours_max} <span className="text-xl text-slate-400 opacity-50 font-black italic">H_D_S</span>
                                         </p>
-                                        <p className="text-[10px] text-muted-foreground mt-1 italic">{quote.eta_notes || 'Una vez iniciados los trabajos.'}</p>
+                                        <p className="text-[9px] text-slate-400 mt-4 leading-relaxed font-black italic uppercase tracking-widest">{quote.eta_notes || 'Protocolo sujeto a respuesta inmediata.'}</p>
+                                    </div>
+                                    <div className="p-8 bg-slate-950 rounded-[2rem] text-white shadow-xl shadow-slate-900/40 flex flex-col justify-center gap-4">
+                                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] mb-2 italic leading-none">DESGLOSE DE ACTIVOS</p>
+                                         <div className="space-y-3">
+                                             <div className="flex justify-between text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 italic">
+                                                 <span>Logística y Lab_</span>
+                                                 <span>${(quote.grand_total * 0.45).toFixed(2)}</span>
+                                             </div>
+                                             <div className="flex justify-between text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 italic">
+                                                 <span>Refacciones OEM_</span>
+                                                 <span>${(quote.grand_total * 0.55).toFixed(2)}</span>
+                                             </div>
+                                             <div className="w-full h-px bg-white/5 my-3" />
+                                             <div className="flex justify-between text-xl font-black text-white uppercase italic tracking-tighter">
+                                                 <span className="text-primary italic">TOTAL DENVER</span>
+                                                 <span>${quote.grand_total.toFixed(2)}</span>
+                                             </div>
+                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-3">
-                                    <h4 className="text-sm font-bold border-b pb-2">Desglose de Conceptos</h4>
-                                    <div className="space-y-2">
+                                {/* Items Matrix */}
+                                <div className="space-y-8">
+                                    <h4 className="text-[10px] font-black text-slate-950 uppercase tracking-[0.8em] flex items-center gap-4 italic">
+                                        <div className="w-12 h-[2px] bg-primary" /> CONCEPTOS TÉCNICOS
+                                    </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {quote.quote_items?.map((item: any) => (
-                                            <div key={item.id} className="flex justify-between text-sm py-1 border-b border-dashed border-slate-200 last:border-0">
-                                                <span>
-                                                    <Badge variant="outline" className="mr-2 text-[8px] uppercase">{item.type}</Badge>
-                                                    {item.description}
-                                                    {item.quantity > 1 && <span className="text-muted-foreground text-[10px] ml-1">(x{item.quantity})</span>}
-                                                </span>
-                                                <span className={item.type === 'DISCOUNT' ? 'text-success font-bold' : ''}>
+                                            <div key={item.id} className="flex justify-between items-center p-6 bg-slate-50 rounded-[1.5rem] border border-slate-100 hover:bg-slate-950 hover:text-white transition-all duration-700 group/entry">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-2 h-2 bg-primary rounded-full shadow-lg shadow-primary/20 group-hover/entry:animate-ping" />
+                                                    <div className="space-y-1">
+                                                        <span className="text-sm font-black uppercase italic tracking-tighter block leading-none">{item.description}</span>
+                                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] group-hover/entry:text-primary transition-colors">{item.type}</span>
+                                                    </div>
+                                                </div>
+                                                <span className={`text-xl font-black italic tracking-tighter ${item.type === 'DISCOUNT' ? 'text-emerald-500' : 'group-hover/entry:text-primary transition-colors'}`}>
                                                     {item.type === 'DISCOUNT' ? '-' : ''}${Math.abs(item.total_price).toFixed(2)}
                                                 </span>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="flex justify-between font-bold text-lg pt-2 text-slate-800">
-                                        <span>Total Final</span>
-                                        <span>${quote.grand_total.toFixed(2)}</span>
-                                    </div>
                                 </div>
 
-                                {/* Approval Form */}
-                                <div className="bg-white p-6 rounded-xl border-2 border-slate-100 space-y-4">
-                                    <h4 className="font-bold flex items-center gap-2">
-                                        <ShieldCheck size={18} className="text-success" />
-                                        Firma de Autorización
-                                    </h4>
-
-                                    <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
-                                        <input
-                                            type="checkbox"
-                                            id="terms"
-                                            className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                                            checked={acceptedTerms}
-                                            onChange={(e) => setAcceptedTerms(e.target.checked)}
-                                        />
-                                        <label htmlFor="terms" className="text-xs text-slate-600 leading-tight">
-                                            He leído y acepto los <button onClick={() => setShowTerms(true)} className="text-primary font-bold hover:underline">términos y condiciones</button> de Denver Mobile Auto Care. Entiendo que este es un presupuesto autorizado y el costo final puede variar si se encuentran adicionales.
-                                        </label>
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-slate-500 uppercase">Nombre Completo (Firma Digital)</label>
-                                        <Input
-                                            placeholder="Escribe tu nombre tal como aparece en tu identificación"
-                                            value={signature}
-                                            onChange={(e) => setSignature(e.target.value)}
-                                            className="font-signature text-lg italic"
-                                        />
-                                    </div>
-
-                                    <div className="flex gap-3 pt-2">
-                                        <Button
-                                            variant="destructive"
-                                            className="flex-1"
-                                            onClick={handleRejectQuote}
-                                            disabled={submitting}
-                                        >
-                                            <X size={16} className="mr-2" /> Rechazar
-                                        </Button>
-                                        <Button
-                                            className="flex-[2] bg-success hover:bg-success/90 text-white"
-                                            onClick={handleApproveQuote}
-                                            disabled={!acceptedTerms || !signature.trim() || submitting}
-                                        >
-                                            <Check size={16} className="mr-2" /> Autorizar Reparación
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Approved Quote Summary */}
-                    {quote && quote.status === 'APPROVED' && (
-                        <Card className="border-success bg-success/5 overflow-hidden">
-                            <CardHeader className="bg-success/10 border-b border-success/20 py-3">
-                                <CardTitle className="text-sm font-bold text-success-foreground flex items-center gap-2">
-                                    <Shield size={16} /> Presupuesto Autorizado
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-4 flex justify-between items-center flex-wrap gap-4">
-                                <div>
-                                    <p className="text-xs text-muted-foreground uppercase font-bold">Total del Proyecto</p>
-                                    <p className="text-2xl font-bold text-slate-800">${quote.grand_total.toFixed(2)}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-xs text-muted-foreground uppercase font-bold">Estado</p>
-                                    <Badge variant="success">TRABAJO EN PROCESO</Badge>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Diagnosis Result */}
-                    {inspection?.status === 'COMPLETED' ? (
-                        <Card className={`border-l-8 ${inspection.risk === 'HIGH' ? 'border-l-destructive bg-destructive/5' : inspection.risk === 'MED' ? 'border-l-amber-500 bg-amber-500/5' : 'border-l-success bg-success/5'}`}>
-                            <CardHeader>
-                                <div className="flex justify-between items-center mb-2">
-                                    <Badge className={inspection.risk === 'HIGH' ? 'bg-destructive' : inspection.risk === 'MED' ? 'bg-amber-500' : 'bg-success'}>
-                                        RIESGO: {inspection.risk}
-                                    </Badge>
-                                    <span className="text-xs text-muted-foreground flex items-center gap-1 italic">
-                                        <ShieldCheck size={12} /> Diagnosticado por experto
-                                    </span>
-                                </div>
-                                <CardTitle className="text-xl">Diagnóstico Técnico</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <section>
-                                    <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Hallazgos</h4>
-                                    <p className="text-slate-700 bg-white/50 p-4 rounded-lg border border-slate-100 leading-relaxed">
-                                        {inspection.findings || 'No se registraron hallazgos específicos.'}
-                                    </p>
-                                </section>
-                                <section>
-                                    <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Recomendación & Plan</h4>
-                                    <p className="text-slate-700 bg-white/50 p-4 rounded-lg border border-slate-100 leading-relaxed">
-                                        {inspection.recommendations || 'No se registraron recomendaciones.'}
-                                    </p>
-                                </section>
-                                <div className="flex items-center gap-3 p-3 bg-white/80 rounded-lg border border-slate-100 text-xs text-slate-600">
-                                    <Zap size={14} className="text-amber-500" />
-                                    <span><strong>Preferencia de partes:</strong> {inspection.parts_by === 'SERVICE' ? 'Nosotros suministramos las refacciones premium.' : 'Mixto/Cliente por coordinar.'}</span>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ) : (
-                        <Card className="bg-slate-50 border-dashed">
-                            <CardContent className="p-12 text-center text-muted-foreground">
-                                <Wrench size={40} className="mx-auto mb-4 opacity-20" />
-                                <h3 className="text-lg font-medium text-slate-600">Inspección en curso</h3>
-                                <p className="text-sm max-w-xs mx-auto mt-2">Nuestro técnico está revisando tu vehículo en este momento. Te notificaremos cuando el diagnóstico esté listo.</p>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Simple Checklist Summary */}
-                    {results.length > 0 && (
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold flex items-center gap-2">
-                                <FileText size={20} className="text-primary" />
-                                Resumen de Inspección Digital
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {categories.map(cat => (
-                                    <Card key={cat} className="overflow-hidden">
-                                        <div className="bg-slate-50 px-3 py-2 text-xs font-bold uppercase tracking-widest text-slate-500 border-b">
-                                            {cat}
+                                {/* Approval Terminal */}
+                                <div className="bg-slate-50 p-6 md:p-8 rounded-[2rem] border-2 border-dashed border-slate-100 space-y-8">
+                                    <div className="flex items-center gap-4 border-b border-slate-100 pb-6">
+                                        <div className="w-16 h-16 rounded-[1.5rem] bg-slate-950 flex items-center justify-center text-primary shadow-lg rotate-12 transition-transform hover:rotate-0 duration-700">
+                                            <ShieldCheck size={32} />
                                         </div>
-                                        <CardContent className="p-3 space-y-2">
-                                            {results.filter(r => r.checklist_items?.category === cat).map(r => (
-                                                <div key={r.id} className="flex justify-between items-center text-sm">
-                                                    <span className="text-slate-600">{r.checklist_items?.item_name}</span>
-                                                    <Badge variant={r.status === 'OK' ? 'success' : r.status === 'ISSUE' ? 'destructive' : 'outline'} className="text-[10px] px-1.5 h-5">
-                                                        {r.status}
-                                                    </Badge>
-                                                </div>
-                                            ))}
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
+                                        <div className="space-y-1">
+                                            <h4 className="text-3xl font-black italic uppercase tracking-tighter leading-none text-slate-900">FIRMA <span className="text-primary italic">DIGITAL</span></h4>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] italic">Protocolo de seguridad Denver_Auth</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-8">
+                                        <div className="flex items-start gap-6 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:-translate-y-1 transition-all duration-500 cursor-pointer group/chk" onClick={() => setAcceptedTerms(!acceptedTerms)}>
+                                            <div className={`w-8 h-8 rounded-xl border-2 transition-all duration-500 flex items-center justify-center shrink-0 ${acceptedTerms ? 'bg-primary border-primary rotate-12 shadow-primary/30' : 'bg-transparent border-slate-100'}`}>
+                                                {acceptedTerms && <Check size={18} strokeWidth={5} className="text-white" />}
+                                            </div>
+                                            <div className="space-y-2">
+                                                <p className="text-lg font-black uppercase tracking-tighter text-slate-950 italic">CONSENTIMIENTO OPERATIVO</p>
+                                                <p className="text-[10px] text-slate-400 leading-relaxed font-black uppercase tracking-widest italic">Entiendo y autorizo la ejecución de los trabajos listados conforme a los <button onClick={(e) => { e.stopPropagation(); setShowTerms(true); }} className="text-primary font-black hover:underline underline-offset-4 decoration-2">TÉRMINOS DE SERVICIO</button>. Esta autorización vincula el despliegue técnico inmediato.</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <label className="text-[10px] font-black text-slate-950 uppercase tracking-[0.5em] block ml-4 italic leading-none">IDENTIFICACIÓN DEL OPERADOR_</label>
+                                            <Input
+                                                placeholder="NOMBRE COMPLETO PARA FIRMAR"
+                                                value={signature}
+                                                onChange={(e) => setSignature(e.target.value)}
+                                                className="h-16 bg-white border-2 border-slate-100 text-slate-950 font-black italic text-xl uppercase tracking-tighter rounded-2xl px-6 focus:ring-4 focus:ring-primary/20 shadow-inner placeholder:text-slate-200 placeholder:italic placeholder:font-black transition-all"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col md:flex-row gap-4 pt-2">
+                                            <Button
+                                                variant="ghost"
+                                                className="h-14 rounded-xl text-slate-400 hover:text-rose-500 font-black text-[10px] tracking-[0.4em] uppercase transition-all duration-300 border-2 border-transparent hover:border-rose-100 italic"
+                                                onClick={handleRejectQuote}
+                                                disabled={submitting}
+                                            >
+                                                X_ ABORTAR MISIÓN
+                                            </Button>
+                                            <Button
+                                                size="lg"
+                                                className="h-16 flex-1 rounded-2xl bg-slate-950 hover:bg-primary text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all duration-700 shadow-xl shadow-slate-900/30 flex items-center justify-center gap-4 border-none italic group"
+                                                onClick={handleApproveQuote}
+                                                disabled={!acceptedTerms || !signature.trim() || submitting}
+                                            >
+                                                AUTORIZAR DESPLIEGUE AHORA <Zap size={20} className="group-hover:scale-125 transition-transform animate-pulse" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {/* Technical Analysis Output */}
+                    {inspection?.status === 'COMPLETED' ? (
+                        <div className="space-y-8">
+                            <Card className={`border-none shadow-md shadow-slate-200/50 rounded-3xl overflow-hidden bg-white group transition-all hover:shadow-primary/5`}>
+                                <div className={`h-4 w-full ${inspection.risk === 'HIGH' ? 'bg-rose-500 animate-pulse' : inspection.risk === 'MED' ? 'bg-amber-500' : 'bg-emerald-500'}`} />
+                                <CardHeader className="p-8 md:p-12 pb-0 space-y-6">
+                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                        <Badge className={`px-6 py-2 text-[10px] font-black uppercase tracking-[0.5em] rounded-full border-none shadow-sm italic ${
+                                            inspection.risk === 'HIGH' ? 'bg-rose-500 text-white' : 
+                                            inspection.risk === 'MED' ? 'bg-amber-500 text-slate-950' : 
+                                            'bg-emerald-500 text-white'
+                                        }`}>
+                                            NIVEL DE RIESGO: {inspection.risk}
+                                        </Badge>
+                                        <div className="flex items-center gap-3 text-slate-400 font-black text-[9px] uppercase tracking-[0.5em] italic bg-slate-50 px-6 py-2 rounded-full border border-slate-100">
+                                            <ShieldCheck size={16} className="text-primary" /> DENVER_TECH_CERTIFIED
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter leading-[0.8] text-slate-950 group-hover:text-primary transition-colors duration-700">HALLAZGOS<br /><span className="opacity-40 italic">OPERATIVOS</span></h2>
+                                        <p className="text-slate-400 font-black uppercase tracking-[0.8em] text-[10px] pl-2 border-l-4 border-primary italic mt-4">SCANNED_DIAGNOSTIC_VER_1.0</p>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="p-8 md:p-12 pt-8 space-y-12">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <section className="space-y-6 bg-slate-50 p-8 rounded-3xl border border-slate-100 shadow-inner group/finding hover:bg-white transition-all duration-500">
+                                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.5em] flex items-center gap-4 italic">
+                                                <div className="w-8 h-[2px] bg-primary group-hover/finding:w-16 transition-all" /> OBSERVACIONES
+                                            </h4>
+                                            <p className="text-slate-900 leading-relaxed font-black text-lg italic tracking-tighter uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                                                {inspection.findings || 'SISTEMA NOMINAL. NO SE REPORTARON ANOMALÍAS CRÍTICAS.'}
+                                            </p>
+                                        </section>
+                                        <section className="space-y-6 bg-slate-950 p-8 rounded-3xl text-white shadow-xl relative overflow-hidden group/rec hover:scale-[1.02] transition-all duration-700">
+                                            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
+                                            <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] flex items-center gap-4 italic relative z-10">
+                                                <Zap size={16} className="text-primary group-hover/rec:animate-bounce" /> RECOMENDACIÓN
+                                            </h4>
+                                            <p className="text-slate-200 leading-relaxed font-black text-lg italic tracking-tighter uppercase relative z-10">
+                                                {inspection.recommendations || 'CONTINUAR CON EL CICLO DE MANTENIMIENTO PREVENTIVO DENVER 10K.'}
+                                            </p>
+                                        </section>
+                                    </div>
+
+                                    {/* Checklist Matrix */}
+                                    {results.length > 0 && (
+                                        <div className="space-y-10 pt-10 border-t border-slate-100">
+                                            <div className="flex items-center gap-4">
+                                                <h3 className="text-3xl font-black italic uppercase tracking-tighter text-slate-950 leading-none">CHECKLIST <span className="text-primary italic">SISTÉMICO</span></h3>
+                                                <div className="flex-1 h-px bg-slate-100" />
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                {categories.map(cat => (
+                                                    <div key={cat} className="space-y-6 group/cat">
+                                                        <h5 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 pl-4 border-l-4 border-primary leading-none italic group-hover/cat:text-primary transition-colors">{cat}</h5>
+                                                        <div className="space-y-3">
+                                                            {results.filter(r => r.checklist_items?.category === cat).map(r => (
+                                                                <div key={r.id} className="flex justify-between items-center p-4 md:p-6 bg-slate-50 rounded-2xl hover:bg-slate-950 hover:text-white hover:shadow-lg transition-all duration-700 border border-transparent group/row">
+                                                                    <span className="text-xs font-black uppercase italic tracking-tighter opacity-80 group-hover/row:opacity-100">{r.checklist_items?.item_name}</span>
+                                                                    <Badge className={`px-4 py-1.5 text-[8px] font-black uppercase rounded-full border-none shadow-sm italic ${
+                                                                        r.status === 'OK' ? 'bg-emerald-500/10 text-emerald-500 group-hover/row:bg-emerald-500 group-hover/row:text-white' : 
+                                                                        r.status === 'ISSUE' ? 'bg-rose-500/10 text-rose-500 group-hover/row:bg-rose-500 group-hover/row:text-white' : 
+                                                                        'bg-slate-200 text-slate-400 group-hover/row:bg-white group-hover/row:text-slate-950'
+                                                                    }`}>
+                                                                        {r.status}
+                                                                    </Badge>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
                         </div>
+                    ) : (
+                        /* Diagnostic Pending Terminal */
+                        <Card className="bg-slate-950 rounded-3xl p-16 md:p-24 text-center relative overflow-hidden group shadow-xl shadow-slate-900/50">
+                             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
+                             <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
+                             <div className="relative z-10 space-y-10">
+                                <div className="w-20 h-20 bg-white/5 backdrop-blur-3xl rounded-2xl flex items-center justify-center text-primary mx-auto border border-white/10 shadow-xl group-hover:rotate-12 transition-transform duration-1000">
+                                    <Activity size={40} className="animate-pulse" />
+                                </div>
+                                <div className="space-y-4">
+                                    <h3 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white leading-none">ESCANEANDO <span className="text-primary italic">SISTEMAS_</span></h3>
+                                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.6em] max-w-lg mx-auto leading-relaxed italic border-t border-white/5 pt-6">ANÁLISIS TÉCNICO MULTIPUNTO EN CURSO. SINCRONIZANDO CON DENVER_CLOUD HUB.</p>
+                                </div>
+                                <div className="max-w-md mx-auto pt-6">
+                                    <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
+                                        <div className="h-full bg-primary w-2/3 animate-pulse shadow-[0_0_15px_rgba(var(--primary-rgb),0.6)] rounded-full transition-all duration-1000" />
+                                    </div>
+                                    <p className="text-[9px] font-black text-primary mt-6 uppercase tracking-[0.4em] italic animate-bounce flex items-center justify-center gap-3">
+                                        <Zap size={12} fill="currentColor" /> TRAN_DATA_SENDING_4401KB
+                                    </p>
+                                </div>
+                             </div>
+                        </Card>
                     )}
                 </div>
 
-                {/* Sidebar: Media & Stats */}
-                <div className="space-y-6">
-                    {/* Media Gallery */}
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-sm uppercase text-slate-400">Evidencia (Fotos)</CardTitle>
+                {/* Sidebar: Data Matrix & Evidence */}
+                <aside className="space-y-8">
+                    {/* Visual Evidence Terminal */}
+                    <Card className="rounded-3xl shadow-sm border border-slate-50 bg-white p-8 overflow-hidden group/evidence hover:shadow-primary/5 transition-all">
+                        <CardHeader className="p-0 mb-8 border-b border-slate-50 pb-6 flex flex-row items-center justify-between">
+                            <div className="space-y-1">
+                                <span className="text-[9px] font-black text-primary uppercase tracking-[0.5em] italic leading-none">Assets_</span>
+                                <CardTitle className="text-xl font-black uppercase tracking-tighter text-slate-950 italic">EVIDENCIA</CardTitle>
+                            </div>
+                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover/evidence:bg-slate-950 group-hover/evidence:text-primary transition-all duration-500">
+                                <Camera size={20} />
+                            </div>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="p-0">
                             {allPhotos.length > 0 ? (
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-2 gap-3">
                                     {allPhotos.map((url: string, idx: number) => (
-                                        <div key={idx} className="aspect-square rounded-md overflow-hidden border bg-slate-100 cursor-pointer hover:opacity-80 transition-opacity">
-                                            <img src={url} alt={`Evidencia ${idx}`} className="w-full h-full object-cover" />
+                                        <div key={idx} className="aspect-square rounded-[1rem] overflow-hidden border-2 border-slate-50 bg-slate-100 cursor-pointer hover:scale-95 hover:rotate-2 hover:border-primary transition-all duration-500 shadow-sm">
+                                            <img src={url} alt={`Evidencia_Log_${idx}`} className="w-full h-full object-cover" />
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="text-center py-10 text-xs text-muted-foreground bg-slate-50 rounded-lg border-2 border-dashed">
-                                    No hay fotos adjuntas todavía.
+                                <div className="text-center py-10 px-6 bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-50 space-y-4">
+                                    <div className="w-12 h-12 bg-white rounded-[1rem] flex items-center justify-center text-slate-100 mx-auto shadow-inner">
+                                        <FileText size={24} />
+                                    </div>
+                                    <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] leading-relaxed italic">NO HAY CAPTURAS REGISTRADAS EN LA COLA ACTUAL.</p>
                                 </div>
                             )}
                         </CardContent>
                     </Card>
 
-                    {/* Service Info */}
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-sm uppercase text-slate-400">Información del Servicio</CardTitle>
+                    {/* Operational Details Matrix */}
+                    <Card className="rounded-3xl shadow-sm border border-slate-50 bg-white p-8 overflow-hidden group/ops hover:shadow-primary/5 transition-all">
+                         <CardHeader className="p-0 mb-8 border-b border-slate-50 pb-6">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] italic leading-none mb-1 block">Matrix_Data</span>
+                            <CardTitle className="text-xl font-black uppercase tracking-tighter text-slate-950 italic">PROTOCOLO</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-start gap-3">
-                                <MapPin size={16} className="text-primary mt-1 shrink-0" />
-                                <div className="text-sm">
-                                    <p className="font-medium">Ubicación de Visita</p>
-                                    <p className="text-muted-foreground italic text-xs leading-relaxed">Las coordenadas y dirección exacta están protegidas para privacidad del técnico.</p>
+                        <CardContent className="p-0 space-y-8">
+                             <div className="flex items-start gap-4 group/item pt-1">
+                                <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary shrink-0 group-hover/ops:rotate-12 transition-transform duration-500 shadow-sm border border-primary/5">
+                                    <MapPin size={18} />
                                 </div>
-                            </div>
-                            <div className="pt-4 border-t flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">Estado Global</span>
-                                <Badge variant="secondary">{request.status}</Badge>
-                            </div>
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black uppercase text-slate-950 tracking-[0.2em] leading-none italic">DENVER_HUB_ZONE</p>
+                                    <p className="text-[9px] font-black text-slate-400 italic leading-relaxed uppercase tracking-widest">Sincronización GPS activa. Soporte de cercanía vinculado.</p>
+                                </div>
+                             </div>
 
-                            {['SCHEDULED', 'DIAGNOSED', 'QUOTED'].includes(request.status) && (
-                                <div className="pt-4 border-t space-y-3">
-                                    {(() => {
+                             <div className="pt-8 border-t border-slate-50 space-y-6">
+                                 <div className="flex justify-between items-center group/row">
+                                     <span className="text-[9px] font-black uppercase text-slate-400 tracking-[0.3em] italic group-hover/row:text-primary transition-colors">STATUS_NET</span>
+                                     <Badge className="font-black text-[9px] px-4 py-1.5 rounded-full bg-slate-950 text-white uppercase italic tracking-[0.2em] shadow-sm">{request.status}</Badge>
+                                 </div>
+                                 <div className="flex justify-between items-center group/row">
+                                     <span className="text-[9px] font-black uppercase text-slate-400 tracking-[0.3em] italic group-hover/row:text-primary transition-colors">SECURITY_CODE</span>
+                                     <span className="flex items-center gap-2 text-emerald-500 text-[9px] font-black tracking-[0.2em] italic uppercase">
+                                         <ShieldCheck size={14} /> CERTIFIED
+                                     </span>
+                                 </div>
+                             </div>
+
+                             {['SCHEDULED', 'DIAGNOSED', 'QUOTED'].includes(request.status) && (
+                                <div className="pt-8 border-t border-slate-50 space-y-4">
+                                     {(() => {
                                         const appointment = request.appointments?.[0];
                                         if (!appointment || appointment.status === 'CANCELED') return null;
                                         
@@ -518,42 +620,40 @@ export function RequestDetailPage() {
                                         const canReschedule = diffHours >= 12;
 
                                         return (
-                                            <div className="space-y-3">
-                                                <Link to={`/app/schedule?request_id=${requestId}&reschedule=true`} className={!canReschedule ? 'pointer-events-none' : ''}>
+                                            <div className="space-y-4">
+                                                <Link to={`/app/schedule?request_id=${requestId}&reschedule=true`} className={`block w-full ${!canReschedule ? 'pointer-events-none' : ''}`}>
                                                     <Button
-                                                        variant="outline"
-                                                        className={`w-full font-bold border-2 ${canReschedule ? 'border-primary text-primary hover:bg-primary/5' : 'opacity-50 cursor-not-allowed border-slate-200 text-slate-400'}`}
+                                                        size="lg"
+                                                        className={`w-full h-12 rounded-xl font-black text-[10px] tracking-[0.3em] uppercase transition-all duration-500 border-none shadow-sm ${canReschedule ? 'bg-slate-50 text-slate-950 hover:bg-slate-950 hover:text-primary' : 'bg-slate-50 text-slate-200 cursor-not-allowed opacity-50'} italic`}
                                                         disabled={!canReschedule}
                                                     >
-                                                        <Calendar size={16} className="mr-2" /> 
-                                                        {canReschedule ? 'Reprogramar Cita' : 'Reprogramación Bloqueada'}
+                                                        <Calendar size={16} className="mr-3" /> 
+                                                        {canReschedule ? 'MOD_AGEND_PRO' : 'LOCK_AGEND'}
                                                     </Button>
                                                 </Link>
                                                 {!canReschedule && (
-                                                    <p className="text-[9px] text-destructive font-black uppercase text-center flex items-center justify-center gap-1">
-                                                        <Shield size={10} /> 12H de anticipación mínima requerida
-                                                    </p>
+                                                    <div className="p-4 bg-rose-50 rounded-xl flex items-center gap-3 border border-rose-100 shadow-inner">
+                                                         <AlertTriangle size={16} className="text-rose-500 shrink-0" />
+                                                         <p className="text-[8px] text-rose-500 font-black uppercase leading-tight italic tracking-widest">BLOQUEO TEMPORAL: SE REQUIERE VENTANA DE 12H PARA MODIFICACIONES.</p>
+                                                    </div>
                                                 )}
                                             </div>
                                         );
-                                    })()}
+                                     })()}
 
-                                    <Button
-                                        variant="outline"
-                                        className="w-full text-destructive border-destructive/20 hover:bg-destructive/5 font-bold"
+                                     <Button
+                                        variant="ghost"
+                                        className="w-full h-12 text-slate-300 hover:text-rose-600 font-black text-[10px] tracking-[0.4em] uppercase transition-all duration-300 border-none italic hover:bg-rose-50 rounded-xl"
                                         onClick={handleCancelRequest}
                                         loading={submitting}
-                                    >
-                                        <X size={16} className="mr-2" /> Cancelar Servicio
-                                    </Button>
-                                    <p className="text-[10px] text-muted-foreground text-center mt-2 italic">
-                                        Solo puedes cancelar antes de que inicie la reparación.
-                                    </p>
+                                     >
+                                        <X size={16} className="mr-3" /> ABORT_MISSION_X
+                                     </Button>
                                 </div>
-                            )}
+                             )}
                         </CardContent>
                     </Card>
-                </div>
+                </aside>
             </div>
 
             <TermsModal isOpen={showTerms} onClose={() => setShowTerms(false)} />

@@ -322,56 +322,60 @@ export function ChatbotPage() {
                 </CardHeader>
 
                 <CardContent
-                    ref={scrollRef}
-                    className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth bg-[#f8fafc]"
+                    className="flex-1 overflow-hidden p-0 bg-[#f8fafc]"
                 >
-                    {messages.map((m: Message) => (
-                        <div key={m.id} className={`flex gap-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm ${m.role === 'bot' ? 'bg-white border border-slate-200 text-primary' : 'bg-primary text-white'
-                                }`}>
-                                {m.role === 'bot' ? <Bot size={16} /> : <User size={16} />}
-                            </div>
-                            <div className="max-w-[85%] space-y-2">
-                                <div className={`p-4 shadow-sm ${m.role === 'user'
-                                    ? 'bg-primary text-white rounded-2xl rounded-tr-none'
-                                    : 'bg-white border border-slate-100 text-slate-700 rounded-2xl rounded-tl-none'
+                    <div 
+                        ref={scrollRef}
+                        className="h-full overflow-y-auto p-6 space-y-6 scroll-smooth"
+                    >
+                        {messages.map((m: Message) => (
+                            <div key={m.id} className={`flex gap-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm ${m.role === 'bot' ? 'bg-white border border-slate-200 text-primary' : 'bg-primary text-white'
                                     }`}>
-                                    <p className="text-sm leading-relaxed">{m.text}</p>
-                                    {m.component}
+                                    {m.role === 'bot' ? <Bot size={16} /> : <User size={16} />}
                                 </div>
-
-                                {m.options && (
-                                    <div className={`flex flex-wrap gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                        {m.options.map((opt: { label: string; value: any; action?: string }, i) => (
-                                            <Button
-                                                key={i}
-                                                variant="outline"
-                                                size="sm"
-                                                className="bg-white hover:bg-primary hover:text-white border-primary/20 text-primary rounded-full transition-all duration-200"
-                                                onClick={() => handleOptionClick(opt)}
-                                            >
-                                                {opt.label}
-                                            </Button>
-                                        ))}
+                                <div className="max-w-[85%] space-y-2">
+                                    <div className={`p-4 shadow-sm ${m.role === 'user'
+                                        ? 'bg-primary text-white rounded-2xl rounded-tr-none'
+                                        : 'bg-white border border-slate-100 text-slate-700 rounded-2xl rounded-tl-none'
+                                        }`}>
+                                        <p className="text-sm leading-relaxed">{m.text}</p>
+                                        {m.component}
                                     </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                    {loading && (
-                        <div className="flex gap-3">
-                            <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-primary">
-                                <Loader2 size={16} className="animate-spin" />
-                            </div>
-                            <div className="p-3 bg-white border border-slate-100 rounded-2xl rounded-tl-none">
-                                <div className="flex gap-1">
-                                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce" />
-                                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]" />
-                                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]" />
+
+                                    {m.options && (
+                                        <div className={`flex flex-wrap gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                            {m.options.map((opt: { label: string; value: any; action?: string }, i) => (
+                                                <Button
+                                                    key={i}
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="bg-white hover:bg-primary hover:text-white border-primary/20 text-primary rounded-full transition-all duration-200"
+                                                    onClick={() => handleOptionClick(opt)}
+                                                >
+                                                    {opt.label}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        ))}
+                        {loading && (
+                            <div className="flex gap-3">
+                                <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-primary">
+                                    <Loader2 size={16} className="animate-spin" />
+                                </div>
+                                <div className="p-3 bg-white border border-slate-100 rounded-2xl rounded-tl-none">
+                                    <div className="flex gap-1">
+                                        <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce" />
+                                        <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]" />
+                                        <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]" />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </CardContent>
 
                 <CardFooter className="p-4 bg-white border-t border-slate-100">

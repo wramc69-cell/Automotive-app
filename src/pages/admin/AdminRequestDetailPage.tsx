@@ -145,195 +145,213 @@ export function AdminRequestDetailPage() {
     const appointment = request.appointments?.[0];
 
     return (
-        <div className="space-y-8 pb-20 animate-in">
-            <div className="flex items-center gap-4">
-                <Link to="/admin/requests">
-                    <Button variant="ghost" size="icon" className="rounded-full bg-white shadow hover:bg-indigo-50">
-                        <ArrowLeft size={20} className="text-indigo-600" />
-                    </Button>
-                </Link>
-                <div>
-                    <h1 className="text-2xl font-black text-slate-900 leading-tight">Solicitud #{request.ticket_number || 'S/N'}</h1>
-                    <p className="text-xs font-bold text-slate-400">Panel de Control de Emergencia (Admin Only)</p>
+        <div className="space-y-12 pb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000 font-inter max-w-7xl mx-auto px-4">
+            
+            {/* Cabecera de Control Táctico */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative">
+                <div className="flex items-center gap-8">
+                    <Link to="/admin/requests">
+                        <Button variant="ghost" size="icon" className="w-16 h-16 rounded-[2rem] bg-white shadow-3xl shadow-slate-200/50 hover:bg-primary hover:text-white transition-all group">
+                            <ArrowLeft size={28} className="group-hover:-translate-x-1 transition-transform" />
+                        </Button>
+                    </Link>
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-4">
+                            <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-slate-900 leading-none uppercase">
+                                EXPEDIENTE <span className="text-primary">#{request.ticket_number || 'S/N'}</span>
+                            </h1>
+                        </div>
+                        <p className="text-slate-400 font-bold uppercase tracking-[0.4em] text-[10px] flex items-center gap-2 italic">
+                            <span className="w-10 h-[1px] bg-slate-200" /> TERMINAL DE CONTROL CENTRAL
+                        </p>
+                    </div>
                 </div>
-                <Badge className={`ml-auto font-black px-4 h-8 text-[11px] uppercase tracking-widest ${request.status === 'COMPLETED' ? 'bg-green-500' :
-                        request.status === 'DECLINED' ? 'bg-red-500' : 'bg-indigo-600 pulse-slow'
-                    }`}>
-                    {request.status}
+                <Badge className={`px-8 h-12 text-[11px] font-black tracking-[0.3em] uppercase rounded-full border-none shadow-2xl italic ${
+                    request.status === 'COMPLETED' ? 'bg-emerald-500 text-white' :
+                    request.status === 'DECLINED' || request.status === 'CANCELED' ? 'bg-rose-500 text-white' :
+                    request.status === 'APPROVED' ? 'bg-indigo-600 text-white' :
+                    request.status === 'SCHEDULED' ? 'bg-primary text-white animate-pulse' :
+                    request.status === 'QUOTED' ? 'bg-amber-500 text-white' : 'bg-slate-200 text-slate-600'
+                }`}>
+                    ESTADO: {request.status}
                 </Badge>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                {/* Information and Main Controls */}
-                <div className="xl:col-span-2 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Client details */}
-                        <Card className="rounded-3xl shadow-sm border-slate-100 overflow-hidden">
-                            <CardHeader className="bg-slate-50 py-3 border-b border-slate-100">
-                                <CardTitle className="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
-                                    <User size={14} className="text-indigo-600" /> Datos del Propietario
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+                {/* Columna Principal: Inteligencia de Activos */}
+                <div className="xl:col-span-8 space-y-10">
+                    
+                    {/* Tarjetas de Información en Paralelo */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Cliente */}
+                        <Card className="rounded-[2.5rem] border-none shadow-3xl shadow-slate-200/40 overflow-hidden bg-white group hover:shadow-primary/10 transition-all duration-700">
+                            <CardHeader className="bg-slate-900 p-8 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 blur-3xl rounded-full"></div>
+                                <CardTitle className="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em] flex items-center gap-4 italic relative z-10">
+                                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-primary"><User size={20} /></div> 
+                                    PROPIETARIO DEL ACTIVO
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-6">
-                                <h3 className="text-lg font-black text-slate-900">{request.profiles?.first_name} {request.profiles?.last_name}</h3>
-                                <p className="text-sm font-medium text-slate-500">{request.profiles?.email}</p>
-                                <p className="text-sm font-bold text-indigo-600 mt-2">{request.profiles?.phone}</p>
+                            <CardContent className="p-10 space-y-4">
+                                <h3 className="text-3xl font-black text-slate-900 uppercase italic tracking-tighter group-hover:text-primary transition-colors">{request.profiles?.first_name} {request.profiles?.last_name}</h3>
+                                <div className="flex flex-col gap-2">
+                                    <p className="text-sm font-bold text-slate-400 font-mono lower-case">{request.profiles?.email}</p>
+                                    <p className="text-lg font-black text-slate-900 tracking-widest">{request.profiles?.phone}</p>
+                                </div>
                             </CardContent>
                         </Card>
 
-                        {/* Vehicle details */}
-                        <Card className="rounded-3xl shadow-sm border-slate-100 overflow-hidden">
-                            <CardHeader className="bg-slate-50 py-3 border-b border-slate-100">
-                                <CardTitle className="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
-                                    <CarFront size={14} className="text-indigo-600" /> Identificación del Vehículo
+                        {/* Vehículo */}
+                        <Card className="rounded-[2.5rem] border-none shadow-3xl shadow-slate-200/40 overflow-hidden bg-white group hover:shadow-primary/10 transition-all duration-700">
+                            <CardHeader className="bg-slate-900 p-8 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 blur-3xl rounded-full"></div>
+                                <CardTitle className="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em] flex items-center gap-4 italic relative z-10">
+                                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-primary"><CarFront size={20} /></div> 
+                                    ESPECIFICACIONES TÉCNICAS
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-6">
-                                <h3 className="text-lg font-black text-slate-900">{request.vehicles?.year} {request.vehicles?.make}</h3>
-                                <p className="text-sm font-bold text-slate-500 uppercase">{request.vehicles?.model} {request.vehicles?.trim}</p>
-                                <p className="text-xs font-medium text-slate-400 mt-2 italic">Odometer: {request.vehicles?.odometer} miles</p>
+                            <CardContent className="p-10 space-y-4">
+                                <h3 className="text-3xl font-black text-slate-900 uppercase italic tracking-tighter group-hover:text-primary transition-colors">{request.vehicles?.year} {request.vehicles?.make}</h3>
+                                <div className="flex flex-col gap-2">
+                                    <p className="text-sm font-black text-slate-500 uppercase tracking-widest">{request.vehicles?.model} {request.vehicles?.trim}</p>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest italic">{request.vehicles?.odometer?.toLocaleString()} MILLAS TOTALES</p>
+                                    </div>
+                                </div>
                             </CardContent>
                         </Card>
                     </div>
 
-                    {/* Symptoms & Triage */}
-                    <Card className="rounded-3xl shadow-sm border-slate-100 overflow-hidden border-2 border-dashed border-slate-200">
-                        <CardHeader className="bg-slate-50 py-3 border-b border-slate-100">
-                            <CardTitle className="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
-                                <FileText size={14} className="text-amber-500" /> Diagnóstico Capturado
+                    {/* Reporte de Síntomas */}
+                    <Card className="rounded-[2.5rem] border-none shadow-3xl shadow-slate-200/40 overflow-hidden bg-white group border-l-8 border-primary">
+                        <CardHeader className="p-10 pb-4">
+                            <CardTitle className="text-[11px] font-black uppercase text-slate-400 tracking-[0.4em] flex items-center gap-4 italic">
+                                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-primary shadow-inner"><FileText size={24} /></div> 
+                                DIAGNÓSTICO PRELIMINAR DEL CLIENTE
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6">
-                            <p className="text-slate-700 font-bold mb-4">{request.symptoms_free_text || 'Sin texto de síntomas.'}</p>
-                            <div className="flex flex-wrap gap-2">
+                        <CardContent className="p-10 pt-6 space-y-8">
+                            <div className="bg-slate-50/80 p-8 rounded-[2.5rem] border border-slate-100">
+                                <p className="text-xl font-bold text-slate-700 italic leading-relaxed">"{request.symptoms_free_text || 'Sin texto de síntomas descriptivo.'}"</p>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
                                 {request.symptom_tags?.map((t: string) => (
-                                    <Badge key={t} className="bg-slate-100 text-slate-600 border-slate-200 font-bold">{t}</Badge>
+                                    <Badge key={t} className="bg-white text-slate-900 border-2 border-slate-100 px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest italic shadow-sm group-hover:border-primary transition-colors">{t}</Badge>
                                 ))}
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Admin Override Area */}
-                    <Card className="rounded-3xl border-2 border-red-100 bg-red-50/20 shadow-none overflow-hidden">
-                        <CardHeader className="bg-red-50 py-3 border-b border-red-100">
-                            <CardTitle className="text-[10px] font-black uppercase text-red-500 tracking-widest flex items-center gap-2">
-                                <ShieldAlert size={14} /> Controles Críticos de Administrador
+                    {/* Controles Maestros (Admin Override) */}
+                    <Card className="rounded-[2.5rem] border-none shadow-3xl shadow-rose-200/20 overflow-hidden bg-rose-50/30 group">
+                        <CardHeader className="bg-rose-500 p-10 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl rounded-full"></div>
+                            <CardTitle className="text-[11px] font-black uppercase text-white tracking-[0.5em] flex items-center gap-4 italic relative z-10">
+                                <ShieldAlert size={24} className="animate-pulse" /> PROTOCOLO DE INTERVENCIÓN MANUAL
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6 flex flex-wrap gap-4">
+                        <CardContent className="p-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <Button 
                                 variant="outline" 
-                                size="sm" 
                                 onClick={() => forceStatus('DRAFT')} 
-                                className="text-[10px] h-10 font-bold bg-white text-slate-800 hover:bg-slate-50 border-2 border-slate-200 flex-1 min-w-[120px] transition-all"
+                                className="h-20 rounded-[1.5rem] bg-white border-2 border-slate-200 hover:border-slate-900 text-[10px] font-black uppercase tracking-widest italic transition-all group/btn"
                             >
-                                <History size={14} className="mr-2" /> FORZAR DRAFT
+                                <History size={20} className="mr-3 text-slate-400 group-hover/btn:text-slate-900" /> REINICIAR DRAFT
                             </Button>
                             <Button 
                                 variant="outline" 
-                                size="sm" 
                                 onClick={() => forceStatus('SCHEDULED')} 
-                                className="text-[10px] h-10 font-bold bg-white text-blue-600 hover:bg-blue-600 hover:text-white border-2 border-blue-100 flex-1 min-w-[120px] transition-all"
+                                className="h-20 rounded-[1.5rem] bg-white border-2 border-blue-100 hover:border-blue-600 text-blue-600 text-[10px] font-black uppercase tracking-widest italic transition-all group/btn"
                             >
-                                <Calendar size={14} className="mr-2" /> FORZAR AGENDADO
+                                <Calendar size={20} className="mr-3 group-hover/btn:scale-110" /> FORZAR AGENDADO
                             </Button>
                             <Button 
                                 variant="outline" 
-                                size="sm" 
                                 onClick={() => forceStatus('COMPLETED')} 
-                                className="text-[10px] h-10 font-bold bg-white text-emerald-600 hover:bg-emerald-600 hover:text-white border-2 border-emerald-100 flex-1 min-w-[120px] transition-all"
+                                className="h-20 rounded-[1.5rem] bg-white border-2 border-emerald-100 hover:border-emerald-600 text-emerald-600 text-[10px] font-black uppercase tracking-widest italic transition-all group/btn"
                             >
-                                <CheckCircle size={14} className="mr-2" /> FORZAR COMPLETADO
+                                <CheckCircle size={20} className="mr-3 group-hover/btn:scale-110" /> FORZAR COMPLETADO
                             </Button>
                             <Button 
                                 variant="dark" 
-                                size="sm" 
                                 onClick={() => forceStatus('DECLINED')} 
-                                className="text-[10px] h-10 font-bold bg-rose-600 text-white hover:bg-rose-700 flex-1 min-w-[120px] transition-all border-none"
+                                className="h-20 rounded-[1.5rem] bg-rose-600 hover:bg-rose-700 text-white border-none text-[10px] font-black uppercase tracking-widest italic transition-all shadow-xl shadow-rose-200"
                             >
-                                <XCircle size={14} className="mr-2" /> CANCELAR / RECHAZAR
+                                <XCircle size={20} className="mr-3" /> ANULAR SERVICIO
                             </Button>
                         </CardContent>
                     </Card>
                 </div>
 
-                {/* Side History / Logs */}
-                <div className="space-y-6">
-                    {/* Active Appointment Status */}
-                    <Card className="rounded-3xl shadow-xl shadow-indigo-100/50 border-indigo-100 overflow-hidden">
-                        <CardHeader className="bg-indigo-600 py-4 text-white">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                                <Calendar size={14} /> Información de Cita
+                {/* Columna Lateral: Logística y Auditoría */}
+                <div className="xl:col-span-4 space-y-10">
+                    
+                    {/* Panel de Asignación Logística */}
+                    <Card className="rounded-[2.5rem] border-none shadow-3xl shadow-primary/10 overflow-hidden bg-white group">
+                        <CardHeader className="bg-primary p-10 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-white/20 blur-3xl rounded-full"></div>
+                            <CardTitle className="text-[11px] font-black uppercase text-white tracking-[0.4em] flex items-center gap-4 italic relative z-10">
+                                <Calendar size={20} /> DESPLIEGUE TÉCNICO
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6">
+                        <CardContent className="p-10 space-y-8">
                             {appointment ? (
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center bg-slate-50 p-3 rounded-2xl">
+                                <div className="space-y-8">
+                                    <div className="flex flex-col gap-4 p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 relative group/item">
+                                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover/item:opacity-20 transition-opacity">
+                                            <Wrench size={40} />
+                                        </div>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">PERSONAL ASIGNADO</p>
+                                        <p className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">
+                                            {appointment.assigned_tech_user_id ? `${techs.find(t => t.user_id === appointment.assigned_tech_user_id)?.first_name || 'Agente'} ${techs.find(t => t.user_id === appointment.assigned_tech_user_id)?.last_name || ''}` : 'SIN RECURSO ASIGNADO'}
+                                        </p>
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400">
-                                                <History size={18} />
-                                            </div>
-                                             <div>
-                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Programado para</p>
-                                                <p className="text-xs font-black text-slate-800">{new Date(appointment.scheduled_start).toLocaleString()}</p>
-                                            </div>
+                                            <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+                                            <p className="text-xs font-black text-slate-500 uppercase tracking-widest italic">{appointment.status}</p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col gap-2 p-3 bg-blue-50/50 rounded-2xl">
-                                        <div className="flex items-center gap-3">
-                                            <Wrench className="text-blue-600" size={18} />
-                                            <div>
-                                                <p className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">Asignado a</p>
-                                                <p className="text-xs font-black text-blue-800">
-                                                    {appointment.assigned_tech_user_id ? `${techs.find(t => t.user_id === appointment.assigned_tech_user_id)?.first_name || 'Técnico'} ${techs.find(t => t.user_id === appointment.assigned_tech_user_id)?.last_name || ''}` : 'SIN ASIGNAR'}
-                                                </p>
-                                            </div>
-                                        </div>
+
+                                    <div className="space-y-4">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] ml-2 italic">REASIGNAR OPERADOR</p>
                                         <select 
-                                            className="w-full text-[10px] font-bold h-10 rounded-xl bg-white border-blue-200 border-2 text-blue-900 focus:ring-0 shadow-sm"
+                                            className="w-full h-16 rounded-2xl bg-white border-2 border-slate-100 text-[11px] font-black uppercase tracking-widest italic px-6 focus:ring-4 focus:ring-primary/5 transition-all outline-none appearance-none cursor-pointer"
                                             value={appointment.assigned_tech_user_id || ""}
                                             onChange={(e) => assignTechnician(e.target.value)}
                                         >
-                                            <option value="" disabled>Elegir Técnico por Ubicación...</option>
+                                            <option value="" disabled>SELECCIONAR AGENTE TÉCNICO...</option>
                                             {techs.map(t => (
                                                 <option key={t.user_id} value={t.user_id}>
-                                                    {t.first_name} {t.last_name} ({t.city || 'Sin ciudad'}, {t.zip || 'No Zip'})
+                                                    {t.first_name.toUpperCase()} {t.last_name.toUpperCase()} (ZIP: {t.zip || '---'})
                                                 </option>
                                             ))}
                                         </select>
-                                        {appointment.assigned_tech_user_id && (
-                                            <p className="text-[10px] text-slate-500 font-medium px-1 mt-1 bg-white p-2 rounded-lg border border-slate-100 italic">
-                                                Partida: {techs.find(t => t.user_id === appointment.assigned_tech_user_id)?.address_line1 || 'No registrada'} 
-                                            </p>
-                                        )}
+                                    </div>
+
+                                    <div className="p-8 bg-slate-900 rounded-[2.5rem] shadow-xl">
+                                        <p className="text-[9px] font-black text-primary uppercase tracking-[0.4em] mb-4 italic">CRONOGRAMA DE OPERACIÓN</p>
+                                        <div className="flex items-center gap-4 text-white">
+                                            <Clock size={24} className="text-primary" />
+                                            <div className="space-y-1">
+                                                <p className="text-lg font-black tracking-tighter leading-none">{new Date(appointment.scheduled_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{new Date(appointment.scheduled_start).toLocaleDateString('es-ES', { day: '2-digit', month: 'long' }).toUpperCase()}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="space-y-4">
-                                    <div className="text-center p-4 border-2 border-dashed border-slate-100 rounded-3xl">
-                                        <Clock className="mx-auto text-slate-200 mb-2" size={32} />
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Sin Agenda Activa</p>
-                                        <p className="text-xs text-slate-500 mt-1 italic">Esta solicitud está en borrador o no tiene fecha asignada.</p>
+                                <div className="text-center py-12 space-y-8 bg-slate-50 rounded-[2.5rem] border-4 border-dashed border-slate-100">
+                                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-slate-200 mx-auto shadow-inner">
+                                        <Calendar size={40} />
                                     </div>
-                                    <div className="space-y-2">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase ml-1">Asignar Técnico y Programar (Admin)</p>
-                                        <select 
-                                            id="new-tech-select"
-                                            className="w-full h-10 px-3 rounded-xl border border-slate-200 text-sm font-bold bg-slate-50"
-                                            defaultValue=""
-                                        >
-                                            <option value="">Opcional: Seleccionar Técnico</option>
-                                            {techs.map(t => <option key={t.user_id} value={t.user_id}>{t.first_name} {t.last_name}</option>)}
-                                        </select>
+                                    <div className="space-y-4 px-6">
+                                        <h3 className="text-xl font-black italic uppercase tracking-tighter text-slate-400 leading-tight">SIN AGENDA OPERATIVA</h3>
+                                        <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest leading-relaxed">ESTE EXPEDIENTE REQUIERE PROGRAMACIÓN DE CITA Y ASIGNACIÓN DE TÉCNICO PARA INICIAR EL FLUJO.</p>
                                         <Button 
-                                            className="w-full bg-indigo-600 hover:bg-indigo-700 font-bold"
-                                            onClick={() => {
-                                                const sel = document.getElementById('new-tech-select') as HTMLSelectElement;
-                                                createAppointment(sel.value);
-                                            }}
+                                            className="w-full bg-primary hover:bg-primary/90 text-white h-16 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] italic shadow-xl shadow-primary/20"
+                                            onClick={() => createAppointment()}
                                         >
-                                            AGENDAR Y ASIGNAR AHORA
+                                            INICIAR PROGRAMACIÓN
                                         </Button>
                                     </div>
                                 </div>
@@ -341,38 +359,38 @@ export function AdminRequestDetailPage() {
                         </CardContent>
                     </Card>
 
-                    {/* Full Audit Logs */}
-                    <Card className="rounded-3xl shadow-sm border-slate-100 overflow-hidden bg-slate-900 text-slate-200">
-                        <CardHeader className="bg-slate-800 py-3 border-b border-slate-700 flex flex-row items-center justify-between">
-                            <CardTitle className="text-[10px] font-black uppercase text-indigo-400 tracking-widest flex items-center gap-2">
-                                <ShieldAlert size={14} /> Auditoría Total
+                    {/* Auditoría de Terminal Digital */}
+                    <Card className="rounded-[2.5rem] border-none shadow-3xl shadow-slate-900/40 overflow-hidden bg-slate-950 text-slate-400 font-mono">
+                        <CardHeader className="bg-slate-900 p-8 border-b border-slate-800 flex flex-row items-center justify-between">
+                            <CardTitle className="text-[9px] font-black uppercase text-primary tracking-[0.5em] flex items-center gap-4 italic relative z-10">
+                                <ShieldAlert size={18} /> LOG_TERMINAL_RT
                             </CardTitle>
-                            <span className="text-[10px] font-black bg-indigo-500/20 text-indigo-400 px-2 rounded-full">{auditLogs.length} EVENTOS</span>
+                            <span className="text-[9px] font-bold bg-white/5 text-slate-500 px-4 py-1.5 rounded-full border border-white/5 tracking-[0.2em]">{auditLogs.length} EVENTOS</span>
                         </CardHeader>
-                        <CardContent className="p-0 max-h-[500px] overflow-y-auto">
+                        <CardContent className="p-0 max-h-[450px] overflow-y-auto scrollbar-hide text-[10px]">
                             {auditLogs.map((log) => (
-                                <div key={log.id} className="p-4 border-b border-slate-800 last:border-0 hover:bg-slate-800/50 transition-colors">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <span className={`text-[10px] font-black uppercase tracking-tight ${log.action.includes('ADMIN') ? 'text-amber-400' : 'text-indigo-400'}`}>
-                                            {log.action.replace(/_/g, ' ')}
+                                <div key={log.id} className="p-8 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors relative group/log">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <span className={`font-black uppercase tracking-widest ${log.action.includes('ADMIN') ? 'text-amber-500' : 'text-primary'}`}>
+                                            [{log.action.replace(/_/g, ' ')}]
                                         </span>
-                                        <span className="text-[9px] font-medium text-slate-500">
-                                            {new Date(log.created_at).toLocaleTimeString()}
+                                        <span className="text-slate-600 font-bold">
+                                            {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                         </span>
                                     </div>
-                                    <p className="text-[10px] text-slate-400 leading-normal mb-1">
-                                        Entidad ID: {log.entity_id}
-                                    </p>
-                                    {log.details && (
-                                        <div className="bg-black/30 p-2 rounded text-[9px] font-mono text-slate-500 overflow-x-auto">
-                                            {JSON.stringify(log.details)}
-                                        </div>
-                                    )}
+                                    <div className="space-y-4">
+                                        <p className="text-slate-500 font-bold truncate">ENTITY_ID: <span className="text-slate-300">{log.entity_id}</span></p>
+                                        {log.details && (
+                                            <div className="bg-black/40 p-6 rounded-2xl text-[9px] text-slate-500 overflow-x-auto border border-white/5 group-hover/log:border-primary/20 transition-colors">
+                                                <pre className="whitespace-pre-wrap">{JSON.stringify(log.details, null, 2)}</pre>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                             {auditLogs.length === 0 && (
-                                <div className="text-center py-10 text-slate-600 uppercase font-black text-[10px] tracking-widest italic animate-pulse">
-                                    No hay registros de auditoría.
+                                <div className="text-center py-20 text-slate-700 uppercase font-black text-[9px] tracking-[0.6em] italic animate-pulse">
+                                    [ESPERANDO_TELEMETRIA_SISTEMA]
                                 </div>
                             )}
                         </CardContent>

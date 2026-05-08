@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/Card';
+import { Card, CardContent } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
 import { supabase } from '../../lib/supabase';
 import { supabaseAdmin } from '../../lib/supabaseAdmin';
-import { Mail, ArrowLeft, User, Wrench, Camera, Car, Upload, X, ChevronRight, CheckCircle2, ShieldCheck, Key, Palette, Clock, MapPin, Eye, EyeOff } from 'lucide-react';
+import { Mail, ArrowLeft, User, Wrench, Camera, Car, ShieldCheck, ChevronRight, CheckCircle2, Lock, Eye, EyeOff, MapPin, Calendar, Briefcase, FileText } from 'lucide-react';
 
 export function RegisterPage() {
     const { toast } = useToast();
     const location = useLocation();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [registered, setRegistered] = useState(false);
     
@@ -95,9 +96,13 @@ export function RegisterPage() {
             }
         }
         setStep(prev => prev + 1);
+        window.scrollTo(0, 0);
     };
 
-    const prevStep = () => setStep(prev => prev - 1);
+    const prevStep = () => {
+        setStep(prev => prev - 1);
+        window.scrollTo(0, 0);
+    };
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -109,7 +114,7 @@ export function RegisterPage() {
         setLoading(true);
         try {
             const { data: adminData, error: adminErr } = await supabaseAdmin.auth.admin.createUser({
-                email,
+                email: email.toLowerCase(),
                 password,
                 email_confirm: true,
                 user_metadata: { role, first_name: firstName, last_name: lastName }
@@ -197,21 +202,23 @@ export function RegisterPage() {
 
     if (registered) {
         return (
-            <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-6">
-                <Card className="max-w-md w-full rounded-[3rem] shadow-2xl border-none p-10 text-center space-y-6 animate-in zoom-in-95 duration-500">
-                    <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-green-200">
-                        <CheckCircle2 size={40} className="text-white" />
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 font-inter">
+                <Card className="max-w-md w-full rounded-[2.5rem] shadow-2xl border border-white/10 bg-white/5 backdrop-blur-3xl p-10 text-center space-y-6">
+                    <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                        <CheckCircle2 size={40} className="text-primary" />
                     </div>
                     <div className="space-y-2">
-                        <h2 className="text-2xl font-black text-slate-900 uppercase">¡Registro Exitoso!</h2>
-                        <p className="text-slate-500 font-medium">
+                        <h2 className="text-2xl font-black text-white uppercase tracking-tight">¡REGISTRO EXITOSO!</h2>
+                        <p className="text-slate-400 text-sm font-medium">
                             {role === 'TECH' 
-                                ? 'Tu perfil ha sido enviado para aprobación. Te notificaremos por correo una vez seas activado.' 
+                                ? 'Tu perfil ha sido enviado para aprobación. Te notificaremos una vez seas activado.' 
                                 : 'Tu cuenta ha sido creada. Ya puedes iniciar sesión y agendar servicios.'}
                         </p>
                     </div>
                     <Link to="/auth/login" className="block w-full">
-                        <Button className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-500 font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-200">INICIAR SESIÓN</Button>
+                        <Button className="w-full h-14 rounded-2xl bg-primary text-slate-950 font-bold uppercase tracking-widest hover:bg-white transition-all">
+                            INICIAR SESIÓN
+                        </Button>
                     </Link>
                 </Card>
             </div>
@@ -219,182 +226,198 @@ export function RegisterPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-6 py-12 md:py-20">
-            <div className="max-w-xl w-full space-y-8 animate-in fade-in duration-700">
-                
-                <Card className="rounded-[3rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.12)] border-none overflow-hidden bg-white/80 backdrop-blur-xl">
-                    <CardHeader className="pt-12 px-10 pb-4 text-center space-y-1">
-                        <div className="flex justify-center mb-6">
-                            <div className={`p-4 rounded-3xl shadow-lg ${role === 'TECH' ? 'bg-slate-900 text-white shadow-slate-200' : 'bg-blue-600 text-white shadow-blue-200'}`}>
-                                {role === 'TECH' ? <Wrench size={32} /> : <User size={32} />}
-                            </div>
-                        </div>
-                        <CardTitle className="text-4xl font-black text-slate-900 uppercase tracking-tight leading-none mb-2">
-                            {role === 'TECH' ? 'Únete al Equipo' : 'Nuevo Cliente'}
-                        </CardTitle>
-                        <CardDescription className="text-slate-400 font-black uppercase tracking-[0.2em] text-[10px]">
-                            {step === 1 ? 'Datos de Acceso' : step === 2 ? 'Información Personal' : 'Detalles Finales'}
-                        </CardDescription>
-                    </CardHeader>
+        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 py-12 md:py-20 relative overflow-hidden font-sans">
+            {/* Professional Background Elements */}
+            <div className="absolute inset-0">
+                <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-primary/10 blur-[150px] rounded-full"></div>
+                <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 blur-[150px] rounded-full"></div>
+            </div>
 
-                    <CardContent className="px-10 py-6">
-                        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-                            
+            <div className="w-full max-w-xl relative z-10 space-y-8">
+                <div className="text-center space-y-6">
+                    <Link to="/" className="inline-flex items-center gap-3">
+                        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-primary/20">
+                            <Wrench size={24} fill="currentColor" />
+                        </div>
+                        <span className="text-2xl font-bold tracking-tight text-white italic">Denver <span className="text-primary not-italic">Auto Care</span></span>
+                    </Link>
+                    
+                    <div className="space-y-4">
+                        <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-none">
+                            {role === 'TECH' ? 'Únete al equipo' : 'Crear mi cuenta'}
+                        </h1>
+                        <div className="flex items-center justify-center gap-4 py-2">
+                            {[1, 2, 3].map((s) => (
+                                <div key={s} className={`h-2 rounded-full transition-all duration-500 ${step >= s ? 'w-16 bg-primary shadow-lg shadow-primary/20' : 'w-6 bg-white/10'}`} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <Card className="bg-white/5 border-white/10 backdrop-blur-3xl rounded-[2rem] shadow-2xl overflow-hidden">
+                    <CardContent className="p-8 md:p-10">
+                        <div className="space-y-10">
                             {step === 1 && (
-                                <div className="space-y-4 animate-in slide-in-from-right-10 duration-500">
-                                    <Input label="Correo electrónico" type="email" placeholder="nombre@correo.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl text-lg font-medium border-slate-100 bg-slate-50/50" />
-                                    <div className="relative">
-                                        <Input 
-                                            label="Contraseña" 
-                                            type={showPassword ? "text" : "password"} 
-                                            placeholder="••••••••" 
-                                            required 
-                                            value={password} 
-                                            onChange={(e) => setPassword(e.target.value)} 
-                                            hint="Mínimo 6 caracteres" 
-                                            className="h-14 rounded-2xl text-lg border-slate-100 bg-slate-50/50 pr-12" 
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-4 top-[42px] text-slate-400 hover:text-blue-600 transition-colors"
-                                        >
-                                            {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
-                                        </button>
+                                <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
+                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">Paso 01 — Credenciales</h3>
+                                    <div className="space-y-6">
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-bold text-slate-400 tracking-wide ml-2">Correo Electrónico</label>
+                                            <div className="relative">
+                                                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500">
+                                                    <Mail size={20} />
+                                                </div>
+                                                <Input type="email" placeholder="ejemplo@correo.com" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 pl-14 bg-white/5 border-white/10 text-white rounded-2xl" />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-bold text-slate-400 tracking-wide ml-2">Contraseña</label>
+                                            <div className="relative">
+                                                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500">
+                                                    <Lock size={20} />
+                                                </div>
+                                                <Input type={showPassword ? "text" : "password"} placeholder="Tu contraseña secreta" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 pl-14 pr-14 bg-white/5 border-white/10 text-white rounded-2xl" />
+                                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-500 hover:text-primary transition-colors">
+                                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}
 
                             {step === 2 && (
-                                <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
-                                    {role === 'TECH' && (
-                                        <div className="flex flex-col items-center gap-4">
-                                            <button type="button" onClick={() => photoInputRef.current?.click()} className="relative group w-28 h-28 rounded-[2rem] overflow-hidden border-4 border-dashed border-slate-200 bg-slate-50 hover:border-blue-500 transition-all duration-500 transform hover:scale-105 shadow-inner">
-                                                {photoPreview ? <img src={photoPreview} alt="Foto" className="w-full h-full object-cover" /> : <div className="flex flex-col items-center gap-1 text-slate-300"><Camera size={32} /><span className="text-[10px] font-black uppercase tracking-widest">Foto Perfil</span></div>}
-                                                <div className="absolute inset-0 bg-blue-600/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><Camera size={24} className="text-white" /></div>
-                                            </button>
-                                            <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+                                <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
+                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">Paso 02 — Información Personal</h3>
+                                    <div className="space-y-8">
+                                        {role === 'TECH' && (
+                                            <div className="flex flex-col items-center gap-6 bg-white/5 p-8 rounded-[2.5rem] border border-white/10">
+                                                <button type="button" onClick={() => photoInputRef.current?.click()} className="relative group w-28 h-28 rounded-full overflow-hidden border-2 border-dashed border-white/20 bg-slate-900 flex items-center justify-center hover:border-primary transition-all">
+                                                    {photoPreview ? <img src={photoPreview} alt="Perfil" className="w-full h-full object-cover" /> : <Camera size={32} className="text-slate-500" />}
+                                                    <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
+                                                        <Camera size={24} className="text-white" />
+                                                    </div>
+                                                </button>
+                                                <span className="text-xs font-bold text-slate-400">Subir foto de perfil</span>
+                                                <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+                                            </div>
+                                        )}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <Input label="Nombre" placeholder="Tu nombre" required value={firstName} onChange={(e) => setFirstName(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
+                                            <Input label="Apellido" placeholder="Tu apellido" required value={lastName} onChange={(e) => setLastName(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
                                         </div>
-                                    )}
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Input label="Nombre" placeholder="Tu nombre" required value={firstName} onChange={(e) => setFirstName(e.target.value)} className="h-14 rounded-2xl font-medium" />
-                                        <Input label="Apellido" placeholder="Tu apellido" required value={lastName} onChange={(e) => setLastName(e.target.value)} className="h-14 rounded-2xl font-medium" />
+                                        <Input label="Teléfono de Contacto" type="tel" placeholder="(303) 000-0000" required value={phone} onChange={(e) => setPhone(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
+                                        <div className="space-y-4">
+                                            <Input label="Dirección de Residencial" placeholder="Ej: 123 Street Ave" required value={address} onChange={(e) => setAddress(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
+                                            <div className="grid grid-cols-3 gap-3">
+                                                <Input label="Ciudad" placeholder="Denver" required value={city} onChange={(e) => setCity(e.target.value)} className="h-11 rounded-xl" />
+                                                <Input label="Estado" placeholder="CO" required value={state} onChange={(e) => setState(e.target.value)} className="h-11 rounded-xl" />
+                                                <Input label="ZIP" placeholder="80202" required value={zipCode} onChange={(e) => setZipCode(e.target.value)} className="h-11 rounded-xl" />
+                                            </div>
+                                        </div>
+                                        <Input label="Fecha de Nacimiento" type="date" required value={dob} onChange={(e) => setDob(e.target.value)} className="h-11 rounded-xl [color-scheme:dark]" />
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Input label="Teléfono" type="tel" placeholder="(555) 123-4567" required value={phone} onChange={(e) => setPhone(e.target.value)} className="h-14 rounded-2xl font-medium block w-full" />
-                                        <Input label="Dirección Completa" placeholder="123 Calle Principal" required value={address} onChange={(e) => setAddress(e.target.value)} className="h-14 rounded-2xl font-medium block w-full" />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Input label="Ciudad" placeholder="Denver" required value={city} onChange={(e) => setCity(e.target.value)} className="h-14 rounded-2xl font-medium" />
-                                        <Input label="Estado" placeholder="CO" required value={state} onChange={(e) => setState(e.target.value)} className="h-14 rounded-2xl font-medium block w-full" />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Input label="Zona Postal" placeholder="Ej: 80202" required value={zipCode} onChange={(e) => setZipCode(e.target.value)} className="h-14 rounded-2xl font-medium" />
-                                        <Input label="Fecha de Nacimiento" type="date" required value={dob} onChange={(e) => setDob(e.target.value)} className="h-14 rounded-2xl font-medium block w-full" />
-                                    </div>
+                                </div>
+                            )}
+
+                            {step === 3 && (
+                                <div className="space-y-10 animate-in slide-in-from-right-10 duration-500">
+                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">Paso 03 — Detalles Operativos</h3>
                                     
                                     {role === 'TECH' && (
-                                        <div className="p-5 bg-slate-900/5 rounded-2xl border-2 border-dashed border-slate-100 space-y-4">
-                                            <div className="flex flex-col gap-2">
-                                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Estatus Legal</p>
-                                                <label className="flex items-center gap-4 cursor-pointer group">
-                                                    <div className="relative flex items-center">
-                                                        <input type="checkbox" checked={workAuthorized} onChange={(e) => setWorkAuthorized(e.target.checked)} className="peer h-6 w-6 rounded-lg border-2 border-slate-200 text-blue-600 focus:ring-0 cursor-pointer transition-all checked:border-blue-600" />
-                                                        <ShieldCheck className="absolute h-4 w-4 left-1 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
+                                        <div className="space-y-8">
+                                            <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/10 space-y-8">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                                                        <Car size={22} />
                                                     </div>
-                                                    <div className="space-y-0.5">
-                                                        <p className="text-[11px] font-black text-slate-900">AUTORIZACIÓN DE TRABAJO</p>
-                                                        <p className="text-[10px] text-slate-500 font-medium leading-tight">Confirmo que estoy legalmente autorizado para trabajar en EE. UU.</p>
+                                                    <h4 className="text-sm font-bold text-white tracking-wide">Información del Vehículo</h4>
+                                                </div>
+                                                <div className="flex justify-center">
+                                                    <button type="button" onClick={() => vehiclePhotoInputRef.current?.click()} className="relative w-full h-40 rounded-[2rem] overflow-hidden border-2 border-dashed border-white/10 bg-slate-900 group hover:border-primary transition-all">
+                                                        {vehiclePhotoPreview ? <img src={vehiclePhotoPreview} alt="Auto" className="w-full h-full object-cover" /> : <div className="flex flex-col items-center gap-2 text-slate-500"><Camera size={32} /><span className="text-xs font-bold">Foto del Vehículo</span></div>}
+                                                    </button>
+                                                    <input ref={vehiclePhotoInputRef} type="file" accept="image/*" className="hidden" onChange={handleVehiclePhotoChange} />
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-6">
+                                                    <Input label="Placa" placeholder="ABC-123" required value={techVehiclePlate} onChange={(e) => setTechVehiclePlate(e.target.value.toUpperCase())} className="h-14 rounded-xl" />
+                                                    <Input label="Color" placeholder="Ej: Plateado" required value={techVehicleColor} onChange={(e) => setTechVehicleColor(e.target.value)} className="h-14 rounded-xl" />
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-6">
+                                                    <Input label="Marca" placeholder="Ej: Toyota" required value={techVehicleMake} onChange={(e) => setTechVehicleMake(e.target.value)} className="h-14 rounded-xl" />
+                                                    <Input label="Modelo" placeholder="Ej: Tacoma" required value={techVehicleModel} onChange={(e) => setTechVehicleModel(e.target.value)} className="h-14 rounded-xl" />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <div className="space-y-3">
+                                                    <label className="text-xs font-bold text-slate-400 ml-2">Especialidades Técnicas</label>
+                                                    <textarea value={experience} onChange={(e) => setExperience(e.target.value)} placeholder="Ej: Especialista en sistemas de frenado ..." className="w-full p-6 rounded-[2rem] bg-white/5 border border-white/10 text-white font-medium text-base focus:border-primary outline-none min-h-[120px] transition-all" />
+                                                </div>
+                                                <label className="flex items-center gap-6 p-6 bg-white/5 rounded-[2rem] border border-white/10 cursor-pointer group hover:bg-white/10 transition-all">
+                                                    <div className="relative flex items-center">
+                                                        <input type="checkbox" checked={workAuthorized} onChange={(e) => setWorkAuthorized(e.target.checked)} className="peer h-7 w-7 rounded-xl border-2 border-white/20 bg-white/5 text-primary focus:ring-0 cursor-pointer transition-all checked:border-primary" />
+                                                        <ShieldCheck className="absolute h-5 w-5 left-1 text-slate-950 opacity-0 peer-checked:opacity-100 transition-opacity" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-white tracking-wide">Autorización de Trabajo</p>
+                                                        <p className="text-xs text-slate-500 font-medium italic">Confirmo estatus legal en EE. UU.</p>
                                                     </div>
                                                 </label>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Especialización y Experiencia</label>
-                                                <textarea value={experience} onChange={(e) => setExperience(e.target.value.slice(0, 200))} placeholder="Breve resumen de tus habilidades o experiencia..." className="w-full p-4 rounded-2xl bg-white border border-slate-100 font-medium text-sm focus:border-blue-500 outline-none resize-none h-24" />
                                             </div>
                                         </div>
                                     )}
 
-                                    <div className="p-5 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-3">
-                                        <label className="flex items-start gap-4 cursor-pointer group">
+                                    <div className="p-8 bg-primary/5 rounded-[2.5rem] border border-primary/20 space-y-6">
+                                        <label className="flex items-start gap-6 cursor-pointer group">
                                             <div className="relative flex items-center pt-1">
-                                                <input type="checkbox" checked={dataConsent} onChange={(e) => setDataConsent(e.target.checked)} className="peer h-6 w-6 rounded-lg border-2 border-slate-200 text-blue-600 focus:ring-0 cursor-pointer transition-all checked:border-blue-600" />
-                                                <ShieldCheck className="absolute h-4 w-4 left-1 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
+                                                <input type="checkbox" checked={dataConsent} onChange={(e) => setDataConsent(e.target.checked)} className="peer h-7 w-7 rounded-xl border-2 border-white/20 bg-white/5 text-primary focus:ring-0 cursor-pointer transition-all checked:border-primary" />
+                                                <ShieldCheck className="absolute h-5 w-5 left-1 text-slate-950 opacity-0 peer-checked:opacity-100 transition-opacity" />
                                             </div>
-                                            <div className="space-y-1">
-                                                <p className="text-[11px] font-black text-slate-900 uppercase tracking-widest leading-none">Aviso de Privacidad</p>
-                                                <p className="text-[10px] text-slate-500 font-medium leading-relaxed group-hover:text-slate-700 transition-colors">Acepto el tratamiento de mis datos personales.</p>
+                                            <div className="space-y-2">
+                                                <p className="text-sm font-bold text-white tracking-wide">Aviso de Privacidad</p>
+                                                <p className="text-sm text-slate-400 font-medium leading-relaxed group-hover:text-white transition-colors">Acepto el tratamiento de mis datos personales según los términos de servicio.</p>
                                             </div>
                                         </label>
                                     </div>
                                 </div>
                             )}
 
-                            {step === 3 && role === 'TECH' && (
-                                <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
-                                    <div className="p-7 bg-slate-900 rounded-[2.5rem] relative overflow-hidden group shadow-2xl text-white">
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-blue-600/20" />
-                                        <div className="relative z-10 space-y-5">
-                                            <div className="flex justify-center mb-2">
-                                                <button type="button" onClick={() => vehiclePhotoInputRef.current?.click()} className="relative w-full h-32 rounded-2xl overflow-hidden border-2 border-dashed border-white/20 bg-white/5 hover:border-blue-500">
-                                                    {vehiclePhotoPreview ? <img src={vehiclePhotoPreview} alt="Vehículo" className="w-full h-full object-cover" /> : <div className="flex flex-col items-center gap-1 text-white/30"><Camera size={24} /><span className="text-[9px] font-black uppercase">Foto del Vehículo</span></div>}
-                                                </button>
-                                                <input ref={vehiclePhotoInputRef} type="file" accept="image/*" className="hidden" onChange={handleVehiclePhotoChange} />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-blue-400 uppercase ml-1">Placa</label>
-                                                    <input placeholder="ABC-123" required value={techVehiclePlate} onChange={(e) => setTechVehiclePlate(e.target.value.toUpperCase())} className="w-full h-12 rounded-xl bg-white/10 text-white text-center font-black outline-none" />
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-blue-400 uppercase ml-1">Color</label>
-                                                    <input placeholder="Ej: Blanco" required value={techVehicleColor} onChange={(e) => setTechVehicleColor(e.target.value)} className="w-full h-12 px-4 rounded-xl bg-white/10 text-white font-bold outline-none" />
-                                                </div>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-blue-400 uppercase ml-1">Marca</label>
-                                                    <input placeholder="Ej: Honda" required value={techVehicleMake} onChange={(e) => setTechVehicleMake(e.target.value)} className="w-full h-12 px-4 rounded-xl bg-white/10 text-white font-bold outline-none" />
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-blue-400 uppercase ml-1">Modelo</label>
-                                                    <input placeholder="Ej: Civic" required value={techVehicleModel} onChange={(e) => setTechVehicleModel(e.target.value)} className="w-full h-12 px-4 rounded-xl bg-white/10 text-white font-bold outline-none" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                        </form>
+                            <div className="flex gap-6 pt-8">
+                                {step > 1 && (
+                                    <Button variant="outline" className="flex-1 h-16 rounded-[1.5rem] border-white/10 text-white hover:bg-white/5 font-bold tracking-widest text-xs" onClick={prevStep}>
+                                        <ArrowLeft size={18} className="mr-3" /> ATRÁS
+                                    </Button>
+                                )}
+                                
+                                <Button 
+                                    className="flex-[2] h-16 rounded-[1.5rem] bg-primary text-slate-950 hover:bg-white font-black uppercase text-sm tracking-[0.2em] transition-all shadow-2xl shadow-primary/10 group"
+                                    onClick={((role === 'TECH' && step < 3) || (role === 'CUSTOMER' && step < 2)) ? nextStep : handleRegister}
+                                    loading={loading}
+                                >
+                                    {((role === 'TECH' && step < 3) || (role === 'CUSTOMER' && step < 2)) ? (
+                                        <>Continuar <ChevronRight size={20} className="ml-2 group-hover:translate-x-2 transition-transform" /></>
+                                    ) : (
+                                        loading ? 'Registrando...' : 'Finalizar Registro'
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
                     </CardContent>
-
-                    <CardFooter className="px-10 pb-12 pt-6 flex flex-col gap-6">
-                        <div className="flex gap-3 w-full">
-                            {step > 1 && (
-                                <Button variant="outline" className="flex-1 h-14 rounded-2xl font-black text-xs uppercase border-slate-200" onClick={prevStep}>
-                                    <ArrowLeft size={16} className="mr-2" /> Atrás
-                                </Button>
-                            )}
-                            
-                            {((role === 'TECH' && step < 3) || (role === 'CUSTOMER' && step < 2)) ? (
-                                <Button className={`flex-[2] h-14 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl ${role === 'TECH' ? 'bg-slate-900 text-white hover:bg-slate-800' : 'bg-blue-600 text-white hover:bg-blue-500'}`} onClick={nextStep}>
-                                    Siguiente <ChevronRight size={16} />
-                                </Button>
-                            ) : (
-                                <Button loading={loading} className={`flex-[2] h-14 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl ${role === 'TECH' ? 'bg-slate-900 text-white' : 'bg-blue-600 text-white'}`} onClick={handleRegister}>
-                                    {loading ? 'Procesando...' : 'Finalizar Registro'}
-                                </Button>
-                            )}
-                        </div>
-
-                        <div className="text-center space-y-3">
-                            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">
-                                ¿Ya tienes cuenta? <Link to="/auth/login" className="text-blue-600 font-black ml-1">Ingresa aquí</Link>
-                            </p>
-                        </div>
-                    </CardFooter>
                 </Card>
+
+                <div className="text-center space-y-8">
+                    <p className="text-sm font-medium text-slate-500">
+                        ¿Ya tienes una cuenta? <Link to="/auth/login" className="text-primary hover:text-white font-bold underline underline-offset-8 ml-2 transition-colors">Ingresar ahora</Link>
+                    </p>
+                    <Link to="/" className="inline-flex items-center gap-3 text-sm font-bold text-slate-600 hover:text-white transition-all group/back">
+                        <ArrowLeft size={18} className="group-hover/back:-translate-x-2 transition-transform" /> Regresar al inicio
+                    </Link>
+                </div>
+            </div>
+
+            <div className="absolute bottom-10 text-center w-full">
+                <p className="text-[10px] font-bold text-slate-800 uppercase tracking-[0.6em]">Denver Mobile Auto Care — © 2026</p>
             </div>
         </div>
     );

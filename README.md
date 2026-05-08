@@ -2,6 +2,8 @@
 
 Sistema de gestión para taller mecánico móvil.
 
+**[Acceder a la Documentación Completa](./DOCUMENTATION.md)**
+
 ## Requisitos
 - Node.js (v18+)
 - Supabase Account

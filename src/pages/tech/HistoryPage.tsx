@@ -6,7 +6,12 @@ import { Button } from '../../components/ui/Button';
 import { supabaseAdmin } from '../../lib/supabaseAdmin';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../components/ui/Toast';
-import { CheckCircle2, Wrench, Calendar, ChevronRight, Search, Car } from 'lucide-react';
+import { 
+    CheckCircle2, Wrench, Calendar, ChevronRight, Search, Car, 
+    Archive, ShieldCheck, Hash, User, Clock, MapPin, 
+    Activity, Signal, Terminal, Radio, Truck, ArrowRight,
+    MoveRight, Zap, Target
+} from 'lucide-react';
 import { Input } from '../../components/ui/Input';
 
 export function TechHistoryPage() {
@@ -23,7 +28,6 @@ export function TechHistoryPage() {
     async function loadHistory() {
         setLoading(true);
         try {
-            // Fetch all appointments for this tech linked to COMPLETED service requests
             const { data, error } = await supabaseAdmin
                 .from('appointments')
                 .select(`
@@ -44,7 +48,6 @@ export function TechHistoryPage() {
 
             if (error) throw error;
 
-            // Deduplicate by request id
             const seen = new Set();
             const unique = (data || []).filter((a: any) => {
                 const rid = a.service_requests?.id;
@@ -56,7 +59,7 @@ export function TechHistoryPage() {
             setHistory(unique);
         } catch (err: any) {
             console.error('loadHistory error:', err);
-            toast({ title: 'Error', description: 'No se pudo cargar el historial.', type: 'error' });
+            toast({ title: 'ERROR_CONEXIÓN', description: 'No se pudo sincronizar el archivo de misiones.', type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -77,144 +80,210 @@ export function TechHistoryPage() {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-                <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-                <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Cargando historial...</p>
+            <div className="flex flex-col items-center justify-center min-h-[70vh] gap-10 font-inter animate-in fade-in duration-1000">
+                <div className="relative">
+                    <div className="w-24 h-24 border-[8px] border-slate-100 border-t-emerald-500 rounded-[2.5rem] animate-spin shadow-3xl shadow-emerald-500/20"></div>
+                    <Archive size={32} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-emerald-500 animate-pulse" />
+                </div>
+                <div className="text-center space-y-2">
+                    <p className="text-slate-950 font-black uppercase text-xl tracking-[0.4em] italic leading-none">QUERY_ARCHIVE_SECTOR</p>
+                    <p className="text-slate-400 font-black uppercase text-[10px] tracking-[0.6em] italic animate-pulse">ESTABLISHING_LINK_v4.2</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="p-6 md:p-8 max-w-6xl mx-auto space-y-8 animate-in pb-24">
-            {/* Header */}
-            <div className="relative overflow-hidden bg-slate-900 rounded-[2.5rem] p-8 md:p-10 text-white shadow-2xl">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
-                                <CheckCircle2 className="text-emerald-400" size={22} />
+        <div className="max-w-[1400px] mx-auto space-y-16 pb-32 animate-in fade-in slide-in-from-bottom-12 duration-1000 px-4 md:px-8 font-inter">
+            
+            {/* Header: Mission Record Archive */}
+            <header className="relative group">
+                <div className="absolute inset-0 bg-emerald-500/10 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none group-hover:bg-emerald-500/20 transition-all duration-1000"></div>
+                <div className="relative z-10 bg-slate-950 rounded-[2.5rem] p-12 md:p-24 overflow-hidden border border-white/5 shadow-3xl">
+                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 rounded-bl-[15rem] pointer-events-none group-hover:scale-110 transition-transform duration-1000"></div>
+                    
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+                        <div className="space-y-10 text-center lg:text-left">
+                            <div className="flex items-center justify-center lg:justify-start gap-6">
+                                <div className="w-16 h-16 bg-white/5 backdrop-blur-3xl rounded-[1.8rem] flex items-center justify-center text-emerald-500 border border-white/10 shadow-3xl group-hover:rotate-12 transition-transform duration-700">
+                                    <Archive size={32} />
+                                </div>
+                                <div className="space-y-1">
+                                    <span className="text-emerald-500 font-black text-[11px] uppercase tracking-[0.6em] italic block">DENVER_MISSION_ARCHIVE</span>
+                                    <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-[9px] italic flex items-center gap-3">
+                                       DATABASE_LINK: <span className="text-white">SECURE_v3.4.0</span>
+                                    </p>
+                                </div>
                             </div>
-                            <span className="text-emerald-400 font-black text-[10px] uppercase tracking-[0.3em]">Registro de Trabajo</span>
+                            <h1 className="text-6xl md:text-9xl font-black italic uppercase tracking-tighter leading-[0.8] text-white">
+                                ARCHIVO DE<br />
+                                <span className="text-emerald-500 italic transition-colors duration-1000 group-hover:text-white">SERVICIOS</span>
+                            </h1>
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter leading-none">
-                            Historial de Servicios
-                        </h1>
-                        <p className="text-slate-400 font-medium mt-2">
-                            {history.length} servicio{history.length !== 1 ? 's' : ''} completado{history.length !== 1 ? 's' : ''} en total
-                        </p>
+                        
+                        <div className="bg-white/5 backdrop-blur-3xl rounded-[2.5rem] p-12 border border-white/10 text-center min-w-[320px] shadow-3xl group-hover:bg-white/10 transition-all duration-700 relative overflow-hidden group/count">
+                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-emerald-500/10 blur-3xl rounded-full group-hover/count:scale-150 transition-transform duration-1000"></div>
+                            <div className="flex flex-col items-center gap-4 relative z-10">
+                                <div className="flex items-center gap-3 bg-emerald-500/20 px-6 py-2 rounded-full border border-emerald-500/20">
+                                    <CheckCircle2 size={14} className="text-emerald-500 animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase text-emerald-500 tracking-[0.4em] pt-0.5">VERIFIED_OPS</span>
+                                </div>
+                                <p className="text-white font-black text-8xl md:text-9xl italic tracking-tighter leading-none group-hover/count:text-emerald-500 transition-colors duration-700">
+                                    {history.length.toString().padStart(2, '0')}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl px-8 py-5 text-center">
-                        <p className="text-4xl font-black text-emerald-400">{history.length}</p>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Total Completados</p>
+                </div>
+            </header>
+
+            {/* Matrix Search: Tactical Interface */}
+            <div className="relative group/search">
+                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 to-primary/10 rounded-[2.5rem] blur opacity-25 group-focus-within/search:opacity-100 transition-opacity"></div>
+                <div className="relative flex items-center bg-white p-2 rounded-[2.5rem] shadow-3xl shadow-slate-200/40 border border-transparent group-focus-within/search:border-emerald-500/20">
+                    <div className="w-20 h-16 flex items-center justify-center text-slate-300 group-focus-within/search:text-emerald-500 transition-colors duration-500">
+                        <Search size={32} />
+                    </div>
+                    <Input
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="BUSCAR EXPEDIENTE: TICKET, VIN, CLIENTE O PROTOCOLO..."
+                        className="flex-1 bg-transparent border-none h-16 text-xl font-black uppercase tracking-widest placeholder:text-slate-200 focus:ring-0 italic"
+                    />
+                    <div className="hidden md:flex items-center gap-4 pr-10">
+                        <div className="h-4 w-[1px] bg-slate-100"></div>
+                        <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic opacity-60"> Denver_Detroit_Net</span>
                     </div>
                 </div>
             </div>
 
-            {/* Search */}
-            <div className="relative">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <Input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Buscar por ticket, vehículo, cliente o servicio..."
-                    className="pl-14 h-14 rounded-2xl border-slate-200 bg-white shadow-sm text-sm font-medium"
-                />
-            </div>
-
-            {/* List */}
+            {/* Archive Matrix Grid */}
             {filtered.length === 0 ? (
-                <Card className="p-20 rounded-[3rem] border-4 border-dashed border-slate-100 flex flex-col items-center justify-center text-center">
-                    <CheckCircle2 size={48} className="text-slate-200 mb-6" />
-                    <h3 className="text-xl font-black uppercase italic text-slate-400 leading-tight">
-                        {search ? 'Sin resultados para esa búsqueda' : 'Aún no tienes servicios completados'}
-                    </h3>
-                    <p className="text-slate-300 text-sm font-medium mt-2">
-                        {search ? 'Intenta con otros términos.' : 'Los servicios que marques como efectuados aparecerán aquí.'}
-                    </p>
-                </Card>
+                <div className="py-48 text-center bg-white rounded-[2.5rem] border-8 border-dashed border-slate-50 flex flex-col items-center gap-12 group transition-all hover:border-slate-100">
+                     <div className="relative">
+                        <div className="w-48 h-48 bg-slate-50 rounded-[2.5rem] shadow-inner flex items-center justify-center text-slate-100 border border-slate-50 rotate-12 group-hover:rotate-0 group-hover:scale-110 transition-all duration-1000 group-hover:text-amber-500">
+                            <Archive size={96} className="opacity-40" />
+                        </div>
+                        <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-slate-950 rounded-[2.5rem] flex items-center justify-center text-white shadow-3xl animate-denver-in">
+                            <Search size={48} className="text-amber-500 shadow-amber-500/50 shadow-xl" />
+                        </div>
+                     </div>
+                    <div className="space-y-6 max-w-lg mx-auto px-10">
+                        <h3 className="text-5xl font-black text-slate-950 uppercase tracking-tighter italic leading-none">{search ? 'CONSULTA_SIN_RESULTADOS' : 'ARCHIVO_EN_BLANCO'}</h3>
+                        <p className="text-[11px] font-black text-slate-300 uppercase tracking-[0.6em] leading-relaxed italic opacity-80">
+                            {search ? 'EL TÉRMINO NO MATCH CON NINGÚN EXPEDIENTE DE MISIONES PASADAS.' : 'EL SISTEMA NO DETECTA MISIONES COMPLETADAS REGISTRADAS EN SU TERMINAL.'}
+                        </p>
+                    </div>
+                    {search && (
+                        <Button 
+                            onClick={() => setSearch('')} 
+                            className="bg-slate-950 h-20 px-16 rounded-[2rem] font-black text-[11px] tracking-[0.4em] text-white uppercase hover:bg-emerald-500 transition-all border-none italic"
+                        >
+                            VER_TODO_EL_ARCHIVO
+                        </Button>
+                    )}
+                </div>
             ) : (
-                <div className="space-y-4">
-                    {filtered.map((appt) => {
+                <div className="grid grid-cols-1 gap-12">
+                    {filtered.map((appt, idx) => {
                         const sr = appt.service_requests;
                         const vehicle = sr?.vehicles;
                         const client = sr?.profiles;
                         const completedDate = new Date(appt.scheduled_start);
 
                         return (
-                            <Card key={appt.id} className="group border-none shadow-xl shadow-slate-100 rounded-3xl overflow-hidden hover:shadow-2xl hover:scale-[1.005] transition-all duration-300">
-                                <CardContent className="p-0 flex flex-col md:flex-row">
-                                    {/* Date Sidebar */}
-                                    <div className="bg-emerald-500 md:w-36 p-6 flex flex-col justify-center items-center text-white text-center gap-1 shrink-0">
-                                        <CheckCircle2 size={20} className="opacity-70 mb-1" />
-                                        <p className="font-black text-2xl leading-none">
-                                            {completedDate.toLocaleDateString('es-ES', { day: '2-digit' })}
-                                        </p>
-                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-80">
-                                            {completedDate.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })}
-                                        </p>
-                                    </div>
-
-                                    {/* Main Content */}
-                                    <div className="flex-1 p-6 md:p-8 space-y-4">
-                                        <div className="flex flex-wrap items-start justify-between gap-3">
-                                            <div className="space-y-1">
-                                                <div className="flex items-center gap-2 flex-wrap">
-                                                    <Badge className="bg-emerald-100 text-emerald-700 border-none text-[9px] font-black uppercase tracking-widest px-3">
-                                                        ✅ COMPLETADO
-                                                    </Badge>
-                                                    <span className="text-[10px] font-black text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
-                                                        Ticket #{sr?.ticket_number || 'S/N'}
-                                                    </span>
-                                                </div>
-                                                <h3 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">
-                                                    {vehicle ? `${vehicle.year || ''} ${vehicle.make} ${vehicle.model}` : 'Vehículo Denver'}
-                                                </h3>
-                                                {client && (
-                                                    <p className="text-sm font-bold text-slate-500">
-                                                        Cliente: {client.first_name} {client.last_name}
+                            <Link key={appt.id} to={`/tech/requests/${sr?.id}`} className="block group/card">
+                                <Card className="border-none shadow-3xl shadow-slate-200/40 bg-white rounded-[2.5rem] overflow-hidden group-hover/card:shadow-emerald-500/20 hover:-translate-y-4 transition-all duration-700 relative border border-transparent hover:border-slate-100">
+                                    <div className="absolute top-0 left-0 w-3 h-full bg-emerald-500/10 group-hover/card:bg-emerald-500 transition-all duration-1000"></div>
+                                    <div className="flex flex-col lg:flex-row">
+                                        
+                                        {/* Date Sidebar: Archive Stamp */}
+                                        <div className="w-full lg:w-[450px] bg-slate-950 p-12 md:p-20 flex flex-col justify-center items-center text-white text-center gap-10 relative overflow-hidden shrink-0 group-hover/card:bg-emerald-500 transition-colors duration-1000">
+                                            <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent pointer-events-none opacity-40 group-hover/card:opacity-20" />
+                                            <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-emerald-500/10 blur-[100px] rounded-full group-hover/card:bg-white/10 transition-colors" />
+                                            
+                                            <div className="w-24 h-24 bg-white/5 backdrop-blur-3xl rounded-[2.5rem] flex items-center justify-center text-emerald-500 group-hover/card:text-slate-950 group-hover/card:rotate-12 transition-all duration-700 border border-white/10 shadow-3xl">
+                                                <Calendar size={48} className="stroke-[2.5]" />
+                                            </div>
+                                            
+                                            <div className="space-y-4 relative z-10">
+                                                <p className="text-[11px] font-black uppercase text-slate-500 tracking-[0.8em] italic mb-3 group-hover/card:text-slate-950 transition-colors">OP_COMP_STAMP</p>
+                                                <div className="flex flex-col items-center scale-110">
+                                                    <p className="text-8xl md:text-9xl font-black italic tracking-tighter leading-[0.7] text-white uppercase group-hover/card:text-slate-950 transition-colors font-mono">
+                                                        {completedDate.toLocaleDateString('es-ES', { day: '2-digit' })}
                                                     </p>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-wrap gap-4 pt-3 border-t border-slate-50">
-                                            <div className="flex items-center gap-2">
-                                                <Wrench size={14} className="text-emerald-600" />
-                                                <span className="text-sm font-bold uppercase tracking-tighter text-slate-700">
-                                                    {sr?.service_catalog?.name || 'Inspección General'}
-                                                </span>
-                                            </div>
-                                            {vehicle?.odometer && (
-                                                <div className="flex items-center gap-2">
-                                                    <Car size={14} className="text-slate-400" />
-                                                    <span className="text-sm font-medium text-slate-500">
-                                                        {vehicle.odometer.toLocaleString('en-US')} mi
-                                                    </span>
+                                                    <div className="flex items-center gap-4 mt-12 bg-white/5 px-10 py-3.5 rounded-full border border-white/10 shadow-3xl group-hover/card:bg-slate-950 group-hover/card:border-slate-950 transition-colors">
+                                                        <Clock size={18} className="text-emerald-500" />
+                                                        <span className="text-[12px] font-black uppercase tracking-[0.6em] italic pt-1">
+                                                            {completedDate.toLocaleDateString('es-ES', { month: 'short' }).toUpperCase()} {completedDate.getFullYear()}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            )}
-                                            <div className="flex items-center gap-2">
-                                                <Calendar size={14} className="text-slate-400" />
-                                                <span className="text-sm font-medium text-slate-500">
-                                                    {completedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}
-                                                </span>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {/* Action */}
-                                    <div className="p-6 flex items-center justify-center bg-slate-50 md:border-l border-slate-100 shrink-0">
-                                        <Link to={`/tech/requests/${sr?.id}`}>
-                                            <Button
-                                                variant="ghost"
-                                                className="h-14 px-8 rounded-2xl font-black text-xs uppercase tracking-widest text-slate-500 hover:bg-emerald-600 hover:text-white transition-all group-hover:translate-x-1"
-                                            >
-                                                Ver Detalle <ChevronRight size={16} className="ml-2" />
-                                            </Button>
-                                        </Link>
+                                        {/* History Operational Content */}
+                                        <CardContent className="flex-1 p-12 md:p-24 space-y-16">
+                                            <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+                                                <div className="space-y-10">
+                                                    <div className="flex flex-wrap items-center gap-6">
+                                                        <Badge className="bg-emerald-500 text-white px-10 py-3.5 text-[11px] font-black uppercase tracking-[0.5em] italic border-none shadow-3xl rounded-full group-hover/card:bg-slate-950 transition-colors duration-700">
+                                                            VERIFICADO_OK
+                                                        </Badge>
+                                                        <div className="flex items-center gap-4 px-8 py-3.5 bg-slate-50 rounded-full border border-slate-100 shadow-inner group-hover/card:bg-white transition-all">
+                                                            <Hash size={16} className="text-emerald-500" /> 
+                                                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] italic">TICKET: #{sr?.ticket_number || 'UNKNOWN'}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-6">
+                                                        <h3 className="text-7xl lg:text-8xl font-black text-slate-950 leading-[0.75] uppercase italic tracking-tighter group-hover/card:text-emerald-500 transition-colors duration-700 scale-105 origin-left">
+                                                            {vehicle ? (
+                                                                <>
+                                                                    {vehicle.make} <br />
+                                                                    <span className="opacity-20 italic">{vehicle.model} {vehicle.year}</span>
+                                                                </>
+                                                            ) : 'ASSET_UNKNOWN'}
+                                                        </h3>
+                                                        <div className="flex items-center gap-6 text-slate-400 font-black uppercase text-[12px] tracking-[0.5em] italic opacity-60 group-hover/card:opacity-100 transition-opacity">
+                                                            <User size={20} className="text-emerald-500" /> 
+                                                            PROPIETARIO: {client ? `${client.first_name} ${client.last_name || ''}` : 'DENVER_CLIENT'}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-6">
+                                                    <div className="w-24 h-24 bg-slate-50 text-slate-200 rounded-[2.5rem] flex items-center justify-center group-hover/card:bg-slate-950 group-hover/card:text-emerald-500 transition-all duration-700 shadow-inner group-hover/card:-rotate-12 border border-slate-50">
+                                                        <Archive size={54} className="stroke-[2.5]" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pt-16 border-t border-slate-50 items-center">
+                                                <div className="lg:col-span-2 flex items-center gap-10 p-12 bg-slate-50 rounded-[2.5rem] border border-slate-100 group-hover/card:bg-white group-hover/card:shadow-3xl group-hover/card:shadow-slate-200/40 transition-all duration-700">
+                                                    <div className="w-24 h-24 bg-white rounded-[2.2rem] flex items-center justify-center text-emerald-500 shadow-3xl border border-slate-50 group-hover/card:scale-110 transition-transform duration-700"><Wrench size={42} /></div>
+                                                    <div className="space-y-2">
+                                                        <p className="text-[12px] font-black text-slate-300 uppercase tracking-[0.8em] mb-2 italic leading-none flex items-center gap-3">
+                                                           PROTOCOL_NAME <div className="w-10 h-[1.5px] bg-emerald-500"></div>
+                                                        </p>
+                                                        <span className="text-3xl font-black uppercase text-slate-950 italic tracking-tighter leading-tight">{sr?.service_catalog?.name || 'GENERIC_MAINTENANCE'}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-end items-center gap-10">
+                                                    <div className="text-right hidden sm:block space-y-3">
+                                                        <p className="text-[11px] font-black text-slate-300 uppercase tracking-[0.6em] italic leading-none">ARCHIVE_CLEARANCE</p>
+                                                        <div className="flex justify-end gap-2">
+                                                            <div className="w-12 h-2.5 bg-emerald-500 rounded-full group-hover/card:w-20 transition-all duration-1000"></div>
+                                                            <div className="w-2.5 h-2.5 bg-slate-100 rounded-full"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="bg-slate-950 text-white h-24 px-12 rounded-full font-black text-[13px] tracking-[0.5em] uppercase italic flex items-center gap-8 shadow-3xl hover:bg-emerald-500 hover:text-white transition-all cursor-pointer group-hover/card:animate-denver-in active:scale-95">
+                                                        CONSULTAR <ArrowRight size={28} className="group-hover/card:translate-x-4 transition-transform duration-700" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </CardContent>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </Card>
+                            </Link>
                         );
                     })}
                 </div>

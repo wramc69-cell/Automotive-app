@@ -46,40 +46,42 @@ export function UpdatePasswordPage() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[80vh] px-4">
-            <Card className="w-full max-w-md animate-in shadow-2xl rounded-[2rem] overflow-hidden border-slate-100">
-                <div className="h-2 w-full bg-primary"></div>
+        <div className="flex items-center justify-center min-h-screen bg-slate-950 px-4 relative overflow-hidden font-inter dark">
+            <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+            <Card className="w-full max-w-md animate-in bg-white/5 backdrop-blur-3xl shadow-3xl rounded-[2.5rem] overflow-hidden border border-white/10 relative z-10 zoom-in duration-700">
+                <div className="h-2 w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
                 <CardHeader className="text-center pt-10">
-                    <CardTitle className="text-3xl font-black text-slate-900">Nueva Contraseña</CardTitle>
-                    <CardDescription className="text-slate-500 font-bold uppercase tracking-tight text-[10px]">
+                    <CardTitle className="text-3xl font-black text-white italic tracking-tighter uppercase">Nueva Contraseña</CardTitle>
+                    <CardDescription className="text-primary font-black uppercase tracking-[0.3em] text-[10px] italic">
                         Ingresa tu nueva contraseña para acceder a tu cuenta
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="px-8 pb-8">
                     <form className="space-y-4" onSubmit={handleUpdate}>
                         <Input
-                            label="Nueva Contraseña"
+                            label="NUEVA CONTRASEÑA"
                             type="password"
                             placeholder="••••••••"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="h-12 rounded-xl"
+                            className="h-14 rounded-2xl border-white/10 bg-white/10 !text-white placeholder-slate-500 focus:border-primary"
                         />
                         <Input
-                            label="Confirmar Contraseña"
+                            label="CONFIRMAR CONTRASEÑA"
                             type="password"
                             placeholder="••••••••"
                             required
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="h-12 rounded-xl"
+                            className="h-14 rounded-2xl border-white/10 bg-white/5 text-white placeholder-slate-500 focus:border-primary"
                         />
                         <Button
                             type="submit"
                             fullWidth
                             loading={loading}
-                            className="h-14 rounded-2xl font-black mt-2 shadow-xl bg-primary shadow-primary/20"
+                            className="h-16 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] font-inter italic shadow-2xl border-none transition-all duration-700 bg-primary text-slate-950 hover:bg-white mt-4"
                         >
                             ACTUALIZAR CONTRASEÑA
                         </Button>

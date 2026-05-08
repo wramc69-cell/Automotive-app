@@ -8,9 +8,10 @@ export interface ModalProps {
     title?: string;
     children: React.ReactNode;
     footer?: React.ReactNode;
+    className?: string;
 }
 
-export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, footer, className }: ModalProps) {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -26,7 +27,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content animate-in" onClick={(e) => e.stopPropagation()}>
+            <div className={`modal-content animate-in ${className || ''}`} onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     {title && <h3 className="modal-title">{title}</h3>}
                     <button className="modal-close" onClick={onClose} aria-label="Close modal">
