@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
+import { useTranslation } from 'react-i18next';
 import { 
     Zap, 
     Wrench, 
@@ -18,6 +19,8 @@ import {
 } from 'lucide-react';
 
 export function LandingPage() {
+    const { t } = useTranslation();
+    
     return (
         <div className="flex flex-col w-full bg-slate-950 font-sans text-slate-100 overflow-x-hidden">
             {/* 1. Hero Section - Immersive Commercial Presence */}
@@ -41,25 +44,25 @@ export function LandingPage() {
                         <div className="space-y-6 animate-denver-in">
                             <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full">
                                 <span className="flex h-2 w-2 rounded-full bg-primary animate-ping"></span>
-                                <span className="text-white text-[11px] font-black uppercase tracking-[0.4em] italic">Mecánica Móvil Premium en Colorado</span>
+                                <span className="text-white text-[11px] font-black uppercase tracking-[0.4em] italic">{t('landing.hero.badge')}</span>
                             </div>
                             
                             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white uppercase leading-[0.85] mb-4">
-                                EL PODER <br />
-                                <span className="text-primary italic">DE REPARAR</span> <br />
-                                <span className="text-white">DONDE SEA.</span>
+                                {t('landing.hero.titlePart1')} <br />
+                                <span className="text-primary italic">{t('landing.hero.titlePart2')}</span> <br />
+                                <span className="text-white">{t('landing.hero.titlePart3')}</span>
                             </h1>
                         </div>
 
                         <p className="text-base md:text-lg font-medium text-slate-400 max-w-lg leading-relaxed animate-denver-in [animation-delay:200ms]">
-                            Olvídate de las salas de espera. Llevamos la tecnología y el equipo de un taller certificado <span className="text-white font-bold italic underline decoration-primary decoration-4 underline-offset-8">directamente a tu ubicación</span>.
+                            {t('landing.hero.description')}
                         </p>
 
                         <div className="flex flex-wrap gap-4 pt-4 animate-denver-in [animation-delay:400ms]">
                             <Link to="/auth/register">
                                 <Button className="h-14 px-10 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:bg-white hover:scale-105 transition-all shadow-xl group relative overflow-hidden">
                                     <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
-                                    SOLICITAR CITA <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                                    {t('landing.hero.requestAppointment')} <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Button>
                             </Link>
                             <a href="tel:3035550123" className="flex items-center h-14 px-6 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all shadow-lg">
@@ -87,13 +90,13 @@ export function LandingPage() {
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <div className="w-6 h-[1px] bg-primary rounded-full"></div>
-                                            <span className="text-primary font-black text-[8px] uppercase tracking-[0.4em] italic">Misión de Cliente</span>
+                                            <span className="text-primary font-black text-[8px] uppercase tracking-[0.4em] italic">{t('landing.roles.client.tag')}</span>
                                         </div>
-                                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">Pedir <br /> <span className="text-primary italic">Asistencia</span></h3>
-                                        <p className="text-slate-400 font-bold text-xs leading-relaxed italic opacity-80">Acceso concierge. Agenda servicios premium con un solo toque.</p>
+                                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">{t('landing.roles.client.titlePart1')} <br /> <span className="text-primary italic">{t('landing.roles.client.titlePart2')}</span></h3>
+                                        <p className="text-slate-400 font-bold text-xs leading-relaxed italic opacity-80">{t('landing.roles.client.description')}</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center border-t border-white/10 pt-4 mt-2">
-                                        <span className="text-white font-black text-[8px] uppercase tracking-[0.3em] italic">INGRESAR PROTOCOLO</span>
+                                        <span className="text-white font-black text-[8px] uppercase tracking-[0.3em] italic">{t('landing.roles.client.button')}</span>
                                         <div className="w-10 h-10 rounded-full bg-white/5 backdrop-blur-3xl text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-slate-950 transition-all duration-500 shadow-2xl border border-white/5">
                                             <ArrowRight size={18} />
                                         </div>
@@ -122,13 +125,13 @@ export function LandingPage() {
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <div className="w-6 h-[1px] bg-emerald-500 rounded-full"></div>
-                                            <span className="text-emerald-500 font-black text-[8px] uppercase tracking-[0.4em] italic">Unidad de Élite</span>
+                                            <span className="text-emerald-500 font-black text-[8px] uppercase tracking-[0.4em] italic">{t('landing.roles.tech.tag')}</span>
                                         </div>
-                                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">Soy <br /> <span className="text-emerald-500 italic">Ingeniero</span></h3>
-                                        <p className="text-slate-400 font-bold text-xs leading-relaxed italic opacity-80">Únete a la flota táctica. Gestión digital Denver.</p>
+                                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">{t('landing.roles.tech.titlePart1')} <br /> <span className="text-emerald-500 italic">{t('landing.roles.tech.titlePart2')}</span></h3>
+                                        <p className="text-slate-400 font-bold text-xs leading-relaxed italic opacity-80">{t('landing.roles.tech.description')}</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center border-t border-white/10 pt-4 mt-2">
-                                        <span className="text-white font-black text-[8px] uppercase tracking-[0.3em] italic">DESPLEGAR UNIDAD</span>
+                                        <span className="text-white font-black text-[8px] uppercase tracking-[0.3em] italic">{t('landing.roles.tech.button')}</span>
                                         <div className="w-10 h-10 rounded-full bg-white/5 backdrop-blur-3xl text-emerald-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-slate-950 transition-all duration-500 shadow-2xl border border-white/5">
                                             <ArrowRight size={18} />
                                         </div>
@@ -158,13 +161,13 @@ export function LandingPage() {
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <div className="w-6 h-[1px] bg-slate-500 rounded-full"></div>
-                                            <span className="text-slate-500 font-black text-[8px] uppercase tracking-[0.4em] italic">Comando Central</span>
+                                            <span className="text-slate-500 font-black text-[8px] uppercase tracking-[0.4em] italic">{t('landing.roles.admin.tag')}</span>
                                         </div>
-                                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">MISSION <br /> <span className="text-white italic">CONTROL</span></h3>
-                                        <p className="text-slate-400 font-bold text-xs leading-relaxed italic opacity-80">Métricas en tiempo real y dispatch de flota.</p>
+                                        <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">{t('landing.roles.admin.titlePart1')} <br /> <span className="text-white italic">{t('landing.roles.admin.titlePart2')}</span></h3>
+                                        <p className="text-slate-400 font-bold text-xs leading-relaxed italic opacity-80">{t('landing.roles.admin.description')}</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center border-t border-white/10 pt-4 mt-2">
-                                        <span className="text-slate-500 font-black text-[8px] uppercase tracking-[0.3em] italic">ACCESO RESTRINGIDO</span>
+                                        <span className="text-slate-500 font-black text-[8px] uppercase tracking-[0.3em] italic">{t('landing.roles.admin.button')}</span>
                                         <div className="w-10 h-10 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center group-hover:bg-white group-hover:text-slate-950 transition-all duration-500 shadow-2xl">
                                             <ArrowRight size={18} />
                                         </div>
@@ -180,35 +183,31 @@ export function LandingPage() {
             <section id="servicios" className="py-32 bg-slate-50 relative overflow-hidden text-slate-900 font-sans">
                 <div className="container mx-auto px-6 space-y-20 relative z-10">
                     <div className="space-y-4">
-                        <span className="text-blue-600 font-black text-[10px] uppercase tracking-widest leading-tight">NUESTRAS ESPECIALIDADES</span>
-                        <h2 className="text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none">Servicios Profesionales</h2>
+                        <span className="text-blue-600 font-black text-[10px] uppercase tracking-widest leading-tight">{t('landing.services.tag')}</span>
+                        <h2 className="text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none">{t('landing.services.title')}</h2>
                     </div>
  
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
                             { 
-                                title: "Aceite y Fluidos", 
-                                desc: "Mantenimiento preventivo esencial. Reemplazo de fluidos vitales con insumos premium para proteger el motor de tu vehículo.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCHsAJAODjwdu6WHzlOsacYFxqLSRtnFIeNjJ_87gNW1UCwBizEKH05cpEr9MGLjckw89BI0i1QLPp_aRC-fyANfZSNE8bD_q3m5w5k445vXqA5aug4bkLBpHhRQbcCdQQY_iyXC7WidoMHMajYLJYFv5NsGNLfgGQFOtRXEKGU3Kezyhs-Jd9uHq8OiICsIjiEhFPm8qx9nglOEx8kCJ7iygr3_f5Qqde7PkhugypPfAQTvjcBHB-Wz5HrmENO5ZT8eku71zFimRY",
-                                slug: "aceite"
+                                id: "oil",
+                                slug: "aceite",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCHsAJAODjwdu6WHzlOsacYFxqLSRtnFIeNjJ_87gNW1UCwBizEKH05cpEr9MGLjckw89BI0i1QLPp_aRC-fyANfZSNE8bD_q3m5w5k445vXqA5aug4bkLBpHhRQbcCdQQY_iyXC7WidoMHMajYLJYFv5NsGNLfgGQFOtRXEKGU3Kezyhs-Jd9uHq8OiICsIjiEhFPm8qx9nglOEx8kCJ7iygr3_f5Qqde7PkhugypPfAQTvjcBHB-Wz5HrmENO5ZT8eku71zFimRY"
                             },
                             { 
-                                title: "Reparación de Frenos", 
-                                desc: "Inspección, diagnóstico y reemplazo de componentes de fricción y sistemas hidráulicos para una frenada segura.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAQk4G5JgdqgsomUuyK2W20eL5JJfW1LZuK_lJIihH8NMC9sxW04GZxf175n-WpwxHAPHO-AwPrnK-ZSQkJejHIvgS1MSptLYibC2l-VcT8p6q7W2Pj2YiAWuG7CYJyKiyO8KYadVQlglv2IsuibhFCkykoBuRbq8dPHWWmkOxeldbYVYyzRZbwjWUaWmsgtYb2yMQaoW7IOeDMpgV4WOUsyK9q3bfizQzPV14c0fQ8Rb0p-lrEyTH4oTr3yEBMJV1aqRFIdTg-WhE",
-                                slug: "frenos"
+                                id: "brakes",
+                                slug: "frenos",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAQk4G5JgdqgsomUuyK2W20eL5JJfW1LZuK_lJIihH8NMC9sxW04GZxf175n-WpwxHAPHO-AwPrnK-ZSQkJejHIvgS1MSptLYibC2l-VcT8p6q7W2Pj2YiAWuG7CYJyKiyO8KYadVQlglv2IsuibhFCkykoBuRbq8dPHWWmkOxeldbYVYyzRZbwjWUaWmsgtYb2yMQaoW7IOeDMpgV4WOUsyK9q3bfizQzPV14c0fQ8Rb0p-lrEyTH4oTr3yEBMJV1aqRFIdTg-WhE"
                             },
                             { 
-                                title: "Diagnóstico Integral", 
-                                desc: "Lectura de computadoras a bordo y escaneo multisistema para localizar fallas electrónicas con precisión milimétrica.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBfm4UsAJydiHQfwnHuklRgDDcET7sfRm09dhER2svFQtjZv13WGzzIV8wCs-XhaZPq5-3pYE2V2411PA7J6E9GQP-RmHuvhlONA76RWjUFvh0s-cgg7DU3gMPUzDz2iQzf1goUSfGeTek5us_MdHuRletAsi1fqEQNGSTCIPywaWIoarN71YyaQmfPSeO2dfq9Ugpgc_9vWeqyjao5njjUt_rIvrCA7FZwC6eoS5XXVIolcb_2-8aOqs0Ptk-M9vEH3Y3T6F2SVhg",
-                                slug: "diagnostico"
+                                id: "diagnostic",
+                                slug: "diagnostico",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBfm4UsAJydiHQfwnHuklRgDDcET7sfRm09dhER2svFQtjZv13WGzzIV8wCs-XhaZPq5-3pYE2V2411PA7J6E9GQP-RmHuvhlONA76RWjUFvh0s-cgg7DU3gMPUzDz2iQzf1goUSfGeTek5us_MdHuRletAsi1fqEQNGSTCIPywaWIoarN71YyaQmfPSeO2dfq9Ugpgc_9vWeqyjao5njjUt_rIvrCA7FZwC6eoS5XXVIolcb_2-8aOqs0Ptk-M9vEH3Y3T6F2SVhg"
                             },
                             { 
-                                title: "Suspensión y Dirección", 
-                                desc: "Alineación, balanceo y sustitución de piezas de desgaste en el tren de rodaje para restaurar el confort de conducción.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCZhLqTobn1VKhGWA4HWcbFBYM0O4YmCqsvqXzu8hsf7UmO7eNyaHuWdC4WspvaFeqTk3eFGnjwrmCyOFrMGHw6btbRi9bgulSy2Xxi9SO9cfwk1gfIrh9CR-mKU31U9ScCGN14sOkwmCP8S0uDh1uy64vWaFdBmHGotGlhajn3IU2ciLi34ltORzuni2b0cKskMePYyKLsvVFKb0xvx-tSK1S55KeyvAS8-f3wLR2RUCf9B9WhraiZE9HyvLUV9EX9uSNhCXpSrlA",
-                                slug: "suspension"
+                                id: "suspension",
+                                slug: "suspension",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCZhLqTobn1VKhGWA4HWcbFBYM0O4YmCqsvqXzu8hsf7UmO7eNyaHuWdC4WspvaFeqTk3eFGnjwrmCyOFrMGHw6btbRi9bgulSy2Xxi9SO9cfwk1gfIrh9CR-mKU31U9ScCGN14sOkwmCP8S0uDh1uy64vWaFdBmHGotGlhajn3IU2ciLi34ltORzuni2b0cKskMePYyKLsvVFKb0xvx-tSK1S55KeyvAS8-f3wLR2RUCf9B9WhraiZE9HyvLUV9EX9uSNhCXpSrlA"
                             }
                         ].map((s, i) => (
                             <a 
@@ -219,7 +218,7 @@ export function LandingPage() {
                                 <div className="aspect-[16/10] overflow-hidden relative">
                                     <img 
                                         src={s.image} 
-                                        alt={s.title} 
+                                        alt={t(`landing.services.items.${s.id}.title`)} 
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                                         onError={(e) => { e.currentTarget.src = "/denver_skyline_hero.png"; }}
                                     />
@@ -227,13 +226,13 @@ export function LandingPage() {
                                 </div>
                                 <div className="p-8 flex flex-col flex-1 gap-4">
                                     <h3 className="text-xl font-black text-slate-900 tracking-tight leading-none group-hover:text-blue-600 transition-colors">
-                                        {s.title}
+                                        {t(`landing.services.items.${s.id}.title`)}
                                     </h3>
                                     <p className="text-sm text-slate-500 font-medium leading-relaxed">
-                                        {s.desc}
+                                        {t(`landing.services.items.${s.id}.desc`)}
                                     </p>
                                     <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between text-blue-600">
-                                        <span className="font-black text-[11px] uppercase tracking-widest group-hover:tracking-[0.2em] transition-all">Ver Detalles</span>
+                                        <span className="font-black text-[11px] uppercase tracking-widest group-hover:tracking-[0.2em] transition-all">{t('landing.services.viewDetails')}</span>
                                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 </div>
@@ -246,74 +245,47 @@ export function LandingPage() {
                         {[
                             {
                                 id: "detalle-aceite",
-                                title: "Aceite y Fluidos",
-                                subtitle: "Prevención y Rendimiento",
-                                text: "El aceite es la sangre de su motor. Proveemos un servicio integral de lubricación utilizando aceites 100% sintéticos de marcas líderes que superan las especificaciones del fabricante (OEM). Nuestro protocolo asegura la máxima limpieza y protección térmica de las piezas móviles de su vehículo.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCHsAJAODjwdu6WHzlOsacYFxqLSRtnFIeNjJ_87gNW1UCwBizEKH05cpEr9MGLjckw89BI0i1QLPp_aRC-fyANfZSNE8bD_q3m5w5k445vXqA5aug4bkLBpHhRQbcCdQQY_iyXC7WidoMHMajYLJYFv5NsGNLfgGQFOtRXEKGU3Kezyhs-Jd9uHq8OiICsIjiEhFPm8qx9nglOEx8kCJ7iygr3_f5Qqde7PkhugypPfAQTvjcBHB-Wz5HrmENO5ZT8eku71zFimRY",
-                                specs: [
-                                    "Cambio de aceite y filtro con grados de viscosidad precisos para el clima de Denver.",
-                                    "Reposición de líquido refrigerante (Anticongelante) y revisión de fugas en el radiador.",
-                                    "Reemplazo o purgado de líquido de transmisión y líquido de dirección hidráulica.",
-                                    "Inspección ecológica: disposición segura de los fluidos usados."
-                                ]
+                                key: "oil",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCHsAJAODjwdu6WHzlOsacYFxqLSRtnFIeNjJ_87gNW1UCwBizEKH05cpEr9MGLjckw89BI0i1QLPp_aRC-fyANfZSNE8bD_q3m5w5k445vXqA5aug4bkLBpHhRQbcCdQQY_iyXC7WidoMHMajYLJYFv5NsGNLfgGQFOtRXEKGU3Kezyhs-Jd9uHq8OiICsIjiEhFPm8qx9nglOEx8kCJ7iygr3_f5Qqde7PkhugypPfAQTvjcBHB-Wz5HrmENO5ZT8eku71zFimRY"
                             },
                             {
                                 id: "detalle-frenos",
-                                title: "Reparación de Sistema de Frenos",
-                                subtitle: "Seguridad Sin Concesiones",
-                                text: "La capacidad de detenerse a tiempo no es negociable. Realizamos intervenciones completas en el sistema de frenado, desde sustituciones rutinarias de pastillas hasta complejas reparaciones en el tren hidráulico, asegurando que tu vehículo responda instantáneamente al pedal.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAQk4G5JgdqgsomUuyK2W20eL5JJfW1LZuK_lJIihH8NMC9sxW04GZxf175n-WpwxHAPHO-AwPrnK-ZSQkJejHIvgS1MSptLYibC2l-VcT8p6q7W2Pj2YiAWuG7CYJyKiyO8KYadVQlglv2IsuibhFCkykoBuRbq8dPHWWmkOxeldbYVYyzRZbwjWUaWmsgtYb2yMQaoW7IOeDMpgV4WOUsyK9q3bfizQzPV14c0fQ8Rb0p-lrEyTH4oTr3yEBMJV1aqRFIdTg-WhE",
-                                specs: [
-                                    "Instalación de balatas y pastillas de calidad OEM (cerámicas o semi-metálicas).",
-                                    "Rectificación experta o reemplazo directo de discos (rotores) y tambores.",
-                                    "Inspección de calipers, mangueras y cilindros maestros para descartar bloqueos.",
-                                    "Cambio y presurización del líquido de frenos (DOT 3 / DOT 4)."
-                                ]
+                                key: "brakes",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAQk4G5JgdqgsomUuyK2W20eL5JJfW1LZuK_lJIihH8NMC9sxW04GZxf175n-WpwxHAPHO-AwPrnK-ZSQkJejHIvgS1MSptLYibC2l-VcT8p6q7W2Pj2YiAWuG7CYJyKiyO8KYadVQlglv2IsuibhFCkykoBuRbq8dPHWWmkOxeldbYVYyzRZbwjWUaWmsgtYb2yMQaoW7IOeDMpgV4WOUsyK9q3bfizQzPV14c0fQ8Rb0p-lrEyTH4oTr3yEBMJV1aqRFIdTg-WhE"
                             },
                             {
                                 id: "detalle-diagnostico",
-                                title: "Diagnóstico Integral y Electrónica",
-                                subtitle: "Tecnología de Punta",
-                                text: "Los autos modernos son redes de computadoras sobre ruedas. Cuando se enciende la luz de 'Check Engine', utilizamos herramientas computarizadas y osciloscopios de última generación para interpretar códigos difusos y aislar problemas eléctricos sin adivinanzas.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBfm4UsAJydiHQfwnHuklRgDDcET7sfRm09dhER2svFQtjZv13WGzzIV8wCs-XhaZPq5-3pYE2V2411PA7J6E9GQP-RmHuvhlONA76RWjUFvh0s-cgg7DU3gMPUzDz2iQzf1goUSfGeTek5us_MdHuRletAsi1fqEQNGSTCIPywaWIoarN71YyaQmfPSeO2dfq9Ugpgc_9vWeqyjao5njjUt_rIvrCA7FZwC6eoS5XXVIolcb_2-8aOqs0Ptk-M9vEH3Y3T6F2SVhg",
-                                specs: [
-                                    "Escaneo bidireccional y lectura de datos OBD-II en tiempo real.",
-                                    "Evaluación profunda del sistema de inyección, bujías y bobinas de encendido.",
-                                    "Pruebas de alternador, batería y caída de voltaje en redes complejas.",
-                                    "Solución integral para monitores de emisiones e inspección de gases."
-                                ]
+                                key: "diagnostic",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBfm4UsAJydiHQfwnHuklRgDDcET7sfRm09dhER2svFQtjZv13WGzzIV8wCs-XhaZPq5-3pYE2V2411PA7J6E9GQP-RmHuvhlONA76RWjUFvh0s-cgg7DU3gMPUzDz2iQzf1goUSfGeTek5us_MdHuRletAsi1fqEQNGSTCIPywaWIoarN71YyaQmfPSeO2dfq9Ugpgc_9vWeqyjao5njjUt_rIvrCA7FZwC6eoS5XXVIolcb_2-8aOqs0Ptk-M9vEH3Y3T6F2SVhg"
                             },
                             {
                                 id: "detalle-suspension",
-                                title: "Geometría, Dirección y Suspensión",
-                                subtitle: "Control y Estabilidad",
-                                text: "Evite el desgaste irregular de los neumáticos y recupere el confort de viaje. Un sistema de suspensión robusto es crucial para tolerar el terreno de la ciudad y absorber el impacto sin transferirlo a la cabina ni comprometer la dirección asistida.",
-                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCZhLqTobn1VKhGWA4HWcbFBYM0O4YmCqsvqXzu8hsf7UmO7eNyaHuWdC4WspvaFeqTk3eFGnjwrmCyOFrMGHw6btbRi9bgulSy2Xxi9SO9cfwk1gfIrh9CR-mKU31U9ScCGN14sOkwmCP8S0uDh1uy64vWaFdBmHGotGlhajn3IU2ciLi34ltORzuni2b0cKskMePYyKLsvVFKb0xvx-tSK1S55KeyvAS8-f3wLR2RUCf9B9WhraiZE9HyvLUV9EX9uSNhCXpSrlA",
-                                specs: [
-                                    "Diagnóstico y reemplazo de amortiguadores y resortes defectuosos.",
-                                    "Revisión de bujes de horquilla, terminales de dirección y rótulas.",
-                                    "Corrección de ruidos ('clunks') en topes, barras estabilizadoras y ejes homocinéticos.",
-                                    "Preparación técnica previa a cualquier servicio de alineación geométrica y balanceo."
-                                ]
+                                key: "suspension",
+                                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCZhLqTobn1VKhGWA4HWcbFBYM0O4YmCqsvqXzu8hsf7UmO7eNyaHuWdC4WspvaFeqTk3eFGnjwrmCyOFrMGHw6btbRi9bgulSy2Xxi9SO9cfwk1gfIrh9CR-mKU31U9ScCGN14sOkwmCP8S0uDh1uy64vWaFdBmHGotGlhajn3IU2ciLi34ltORzuni2b0cKskMePYyKLsvVFKb0xvx-tSK1S55KeyvAS8-f3wLR2RUCf9B9WhraiZE9HyvLUV9EX9uSNhCXpSrlA"
                             }
                         ].map((detail, idx) => (
                             <div key={idx} id={detail.id} className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-20 items-center scroll-mt-32`}>
                                 <div className="lg:w-5/12">
                                     <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 group">
                                         <div className="aspect-[4/3] bg-slate-100">
-                                            <img src={detail.image} alt={detail.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                                            <img 
+                                                src={detail.image} 
+                                                alt={t(`landing.services.deepDives.${detail.key}.title`)} 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+                                            />
                                         </div>
                                         <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-[2rem]"></div>
                                     </div>
                                 </div>
                                 <div className="lg:w-7/12 space-y-8">
                                     <div className="space-y-4">
-                                        <h4 className="text-blue-600 font-black text-xs uppercase tracking-widest">{detail.subtitle}</h4>
-                                        <h3 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">{detail.title}</h3>
-                                        <p className="text-slate-600 text-lg leading-relaxed">{detail.text}</p>
+                                        <h4 className="text-blue-600 font-black text-xs uppercase tracking-widest">{t(`landing.services.deepDives.${detail.key}.subtitle`)}</h4>
+                                        <h3 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">{t(`landing.services.deepDives.${detail.key}.title`)}</h3>
+                                        <p className="text-slate-600 text-lg leading-relaxed">{t(`landing.services.deepDives.${detail.key}.text`)}</p>
                                     </div>
                                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {detail.specs.map((spec, sidx) => (
+                                        {Array.isArray(t(`landing.services.deepDives.${detail.key}.specs`, { returnObjects: true })) && 
+                                          (t(`landing.services.deepDives.${detail.key}.specs`, { returnObjects: true }) as string[]).map((spec, sidx) => (
                                             <li key={sidx} className="flex gap-3 items-start bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:border-blue-200 transition-colors">
                                                 <CheckCircle2 className="text-blue-600 mt-0.5 shrink-0" size={18} />
                                                 <span className="text-slate-700 text-sm leading-relaxed font-medium">{spec}</span>
@@ -321,9 +293,9 @@ export function LandingPage() {
                                         ))}
                                     </ul>
                                     <div className="pt-4">
-                                        <Link to={`/auth/register?service=${detail.id.split('-')[1]}`}>
+                                        <Link to={`/auth/register?service=${detail.key}`}>
                                             <Button className="bg-slate-900 hover:bg-blue-600 text-white rounded-xl px-8 h-12 font-black text-[11px] tracking-widest uppercase transition-colors shadow-xl shadow-blue-900/20">
-                                                Agendar este servicio
+                                                {t('landing.services.bookNow')}
                                             </Button>
                                         </Link>
                                     </div>
@@ -341,24 +313,21 @@ export function LandingPage() {
                         <div className="lg:w-1/2 space-y-16">
                             <div className="space-y-6">
                                 <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-lg">
-                                    <span className="text-primary font-black text-[11px] uppercase tracking-[0.4em] italic">Simplicidad Total</span>
+                                    <span className="text-primary font-black text-[11px] uppercase tracking-[0.4em] italic">{t('landing.howItWorks.tag')}</span>
                                 </div>
-                                <h2 className="text-3xl font-black text-white uppercase tracking-tighter leading-none">¿CÓMO <span className="text-primary italic">FUNCIONA</span>?</h2>
-                                <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-lg">Nosotros nos encargamos de todo.</p>
+                                <h2 className="text-3xl font-black text-white uppercase tracking-tighter leading-none">
+                                    {t('landing.howItWorks.titlePart1')} <span className="text-primary italic">{t('landing.howItWorks.titlePart2')}</span>
+                                </h2>
+                                <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-lg">{t('landing.howItWorks.subtitle')}</p>
                             </div>
 
                             <div className="space-y-12">
-                                {[
-                                    { step: "01", title: "SOLICITA EL SERVICIO", desc: "Usa nuestra terminal digital para decirnos qué necesita tu auto." },
-                                    { step: "02", title: "NOSOTROS LLEGAMOS", desc: "Nuestro experto llega a Denver con tecnología de taller avanzado." },
-                                    { step: "03", title: "¡TRABAJO LISTO!", desc: "Reparamos, validamos y tu vehículo queda impecable." },
-                                    { step: "04", title: "EVALUACIÓN CONTINUA", desc: "Usted nos evalúa y mejoramos. Su retroalimentación es clave." }
-                                ].map((step, i) => (
-                                    <div key={i} className="flex gap-6 items-start group">
-                                        <div className="text-3xl font-black text-white/5 group-hover:text-primary transition-colors duration-500 leading-none">{step.step}</div>
+                                {[1, 2, 3, 4].map((stepNum) => (
+                                    <div key={stepNum} className="flex gap-6 items-start group">
+                                        <div className="text-3xl font-black text-white/5 group-hover:text-primary transition-colors duration-500 leading-none">0{stepNum}</div>
                                         <div className="space-y-1 pt-1">
-                                            <h3 className="text-base font-black text-white uppercase tracking-widest leading-none">{step.title}</h3>
-                                            <p className="text-xs text-slate-500 font-medium leading-relaxed">{step.desc}</p>
+                                            <h3 className="text-base font-black text-white uppercase tracking-widest leading-none">{t(`landing.howItWorks.steps.${stepNum}.title`)}</h3>
+                                            <p className="text-xs text-slate-500 font-medium leading-relaxed">{t(`landing.howItWorks.steps.${stepNum}.desc`)}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -382,8 +351,8 @@ export function LandingPage() {
                                             <MapPin size={24} />
                                         </div>
                                         <div>
-                                            <span className="block text-[8px] font-black text-primary uppercase tracking-[0.4em] mb-1">Status en Vivo</span>
-                                            <span className="text-lg font-black text-white uppercase tracking-tighter">Técnico en camino</span>
+                                            <span className="block text-[8px] font-black text-primary uppercase tracking-[0.4em] mb-1">{t('landing.howItWorks.status')}</span>
+                                            <span className="text-lg font-black text-white uppercase tracking-tighter">{t('landing.howItWorks.techOnWay')}</span>
                                         </div>
                                     </div>
                                     <div className="flex gap-1.5">
@@ -402,29 +371,30 @@ export function LandingPage() {
                 <div className="container mx-auto px-6 relative z-10 text-center space-y-20">
                     <div className="max-w-4xl mx-auto space-y-8">
                         <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none italic">
-                            CONFIANZA <span className="text-slate-500">Y TRANSPARENCIA</span> <br /> 
-                            EN <span className="text-primary not-italic">DENVER</span>
+                            {t('landing.trust.titlePart1')} <span className="text-slate-500">{t('landing.trust.titlePart2')}</span> <br />
+                            {t('landing.trust.titlePart3')} <span className="text-primary not-italic">{t('landing.trust.titlePart4')}</span>
                         </h2>
                         <p className="text-slate-400 text-lg font-medium leading-relaxed max-w-3xl mx-auto">
-                            Entendemos lo valioso que es tu tiempo. Operamos en toda el área metropolitana con precisión y garantía total.
+                            {t('landing.trust.description')}
                         </p>
                     </div>
                     
                     <div className="flex flex-wrap justify-center gap-20">
                         <div className="flex flex-col items-center">
                             <span className="text-4xl font-black text-primary italic">24/7</span>
-                            <span className="text-[9px] font-black uppercase tracking-[0.4em] mt-3 text-slate-500 italic">Disponibilidad</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.4em] mt-3 text-slate-500 italic">{t('landing.trust.availability')}</span>
                         </div>
                         <div className="flex flex-col items-center">
                             <span className="text-4xl font-black text-white italic">100%</span>
-                            <span className="text-[9px] font-black uppercase tracking-[0.4em] mt-3 text-slate-500 italic">Móvil & Flexible</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.4em] mt-3 text-slate-500 italic">{t('landing.trust.mobileFlexible')}</span>
                         </div>
                         <div className="flex flex-col items-center">
                             <div className="flex gap-2 mb-2">
                                 {[1,2,3,4,5].map(i => <Star key={i} fill="#FFB800" size={14} className="text-primary" />)}
                             </div>
                             <span className="text-4xl font-black text-white italic">5.0</span>
-                            <span className="text-[9px] font-black uppercase tracking-[0.4em] mt-1 text-slate-500 italic">Satisfacción</span>
+                            <span className="text-4xl font-black text-white italic">5.0</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.4em] mt-1 text-slate-500 italic">{t('landing.trust.satisfaction')}</span>
                         </div>
                     </div>
                 </div>
@@ -436,20 +406,20 @@ export function LandingPage() {
                     <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-[4rem] p-16 md:p-24 flex flex-col lg:flex-row items-center justify-between gap-16 border border-white/10 shadow-default">
                         <div className="space-y-8 max-w-2xl text-center lg:text-left">
                             <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none">
-                                ¿LISTO PARA <br />
-                                <span className="text-primary italic">REPARAR TU</span> <br />
-                                VEHÍCULO?
+                                {t('landing.cta.titlePart1')} <br />
+                                <span className="text-primary italic">{t('landing.cta.titlePart2')}</span> <br />
+                                {t('landing.cta.titlePart3')}
                             </h2>
-                            <p className="text-slate-400 text-lg font-medium leading-relaxed">Únete a cientos de clientes que ya disfrutan de la libertad de un taller que llega a ellos.</p>
+                            <p className="text-slate-400 text-lg font-medium leading-relaxed">{t('landing.cta.description')}</p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-6 items-center">
                             <Link to="/auth/register">
                                 <Button className="h-14 px-10 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:bg-white transition-all shadow-xl group">
-                                    COMENZAR AHORA <ChevronRight size={18} className="ml-2 group-hover:translate-x-1" />
+                                    {t('landing.cta.startNow')} <ChevronRight size={18} className="ml-2 group-hover:translate-x-1" />
                                 </Button>
                             </Link>
                             <a href="tel:3035550123" className="flex items-center h-14 px-6 rounded-xl border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white/5 transition-all">
-                                <Phone size={18} className="mr-3 text-primary" /> LLAMAR DIRECTO
+                                <Phone size={18} className="mr-3 text-primary" /> {t('landing.cta.callDirect')}
                             </a>
                         </div>
                     </div>

@@ -1,0 +1,248 @@
+{
+  "common": {
+    "brandName": "Denver Auto Care",
+    "backToHome": "Regresar al inicio",
+    "copyright": "Denver Mobile Auto Care — © 2026",
+    "logout": "Finalizar Sesión",
+    "loading": "Cargando...",
+    "error": "Error"
+  },
+  "nav": {
+    "services": "Servicios",
+    "howItWorks": "Cómo Funciona",
+    "coverage": "Cobertura",
+    "login": "Ingresar",
+    "explore": "Explorar",
+    "operations": "Operaciones",
+    "protocols": "Protocolos",
+    "adminCommand": "Comando Admin",
+    "techDeployment": "Despliegue Técnico",
+    "aboutHq": "Sobre el HQ",
+    "privacyProtocol": "Protocolo Privacidad",
+    "assistanceRadar": "Radar Asistencia"
+  },
+  "auth": {
+    "login": {
+      "title": "Mando Central",
+      "subtitle": "Ingresa tus credenciales para continuar",
+      "protocolTitle": "Protocolo de Acceso",
+      "protocolSubtitle": "Ingrese credenciales de terminal",
+      "userId": "Identificador de Usuario",
+      "accessCode": "Código de Acceso",
+      "startProtocol": "Iniciar Protocolo",
+      "noAccess": "¿No tienes acceso?",
+      "requestDeployment": "Solicitar Despliegue de Unidad",
+      "successTitle": "Ingreso exitoso",
+      "successDesc": "Cargando tu perfil...",
+      "errorTitle": "Error de ingreso",
+      "invalidCredentials": "Credenciales inválidas"
+    },
+    "register": {
+      "joinTeam": "Únete al equipo",
+      "createAccount": "Crear mi cuenta",
+      "step1Title": "Paso 01 — Credenciales",
+      "step2Title": "Paso 02 — Información Personal",
+      "step3Title": "Paso 03 — Detalles Operativos",
+      "uploadProfilePhoto": "Subir foto de perfil",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "phone": "Teléfono de Contacto",
+      "address": "Dirección Residencial",
+      "city": "Ciudad",
+      "state": "Estado",
+      "zip": "ZIP",
+      "birthDate": "Fecha de Nacimiento",
+      "vehicleInfo": "Información del Vehículo",
+      "vehiclePhoto": "Foto del Vehículo",
+      "plate": "Placa",
+      "color": "Color",
+      "make": "Marca",
+      "model": "Modelo",
+      "technicalSpecialties": "Especialidades Técnicas",
+      "workAuth": "Autorización de Trabajo",
+      "legalStatusConfirm": "Confirmo estatus legal en EE. UU.",
+      "privacyTitle": "Aviso de Privacidad",
+      "privacyAccept": "Acepto el tratamiento de mis datos personales según los términos de servicio.",
+      "registering": "Registrando...",
+      "finishRegistration": "Finalizar Registro",
+      "successTitle": "¡REGISTRO EXITOSO!",
+      "successTechDesc": "Tu perfil ha sido enviado para aprobación. Te notificaremos una vez seas activado.",
+      "successCustomerDesc": "Tu cuenta ha sido creada. Ya puedes iniciar sesión y agendar servicios.",
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+      "fileTooLargeTitle": "Archivo muy grande",
+      "fileTooLargeDesc": "La foto no debe exceder los 5 MB.",
+      "vehicleFileTooLargeDesc": "La foto del vehículo no debe exceder los 5 MB.",
+      "missingDataTitle": "Datos faltantes",
+      "credentialsMissingDesc": "Por favor ingresa tu correo y contraseña.",
+      "weakPasswordTitle": "Contraseña débil",
+      "weakPasswordDesc": "Debe tener al menos 6 caracteres.",
+      "locationMissingDesc": "Por favor completa todos los campos de ubicación y contacto.",
+      "attention": "Atención",
+      "privacyConsentRequired": "Debes aceptar el aviso de privacidad.",
+      "errorGeneric": "No se pudo completar el registro"
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge": "Mecánica Móvil Premium en Colorado",
+      "titlePart1": "EL PODER",
+      "titlePart2": "DE REPARAR",
+      "titlePart3": "DONDE SEA.",
+      "description": "Olvídate de las salas de espera. Llevamos la tecnología y el equipo de un taller certificado directamente a tu ubicación.",
+      "requestAppointment": "SOLICITAR CITA"
+    },
+    "roles": {
+      "client": {
+        "tag": "Misión de Cliente",
+        "titlePart1": "Pedir",
+        "titlePart2": "Asistencia",
+        "description": "Acceso concierge. Agenda servicios premium con un solo toque.",
+        "button": "INGRESAR PROTOCOLO"
+      },
+      "tech": {
+        "tag": "Unidad de Élite",
+        "titlePart1": "Soy",
+        "titlePart2": "Ingeniero",
+        "description": "Únete a la flota táctica. Gestión digital Denver.",
+        "button": "DESPLEGAR UNIDAD"
+      },
+      "admin": {
+        "tag": "Comando Central",
+        "titlePart1": "CONTROL",
+        "titlePart2": "MISIÓN",
+        "description": "Métricas en tiempo real y dispatch de flota.",
+        "button": "ACCESO RESTRINGIDO"
+      }
+    },
+    "services": {
+      "tag": "NUESTRAS ESPECIALIDADES",
+      "title": "Servicios Profesionales",
+      "viewDetails": "Ver Detalles",
+      "bookNow": "Agendar este servicio",
+      "items": {
+        "oil": {
+          "title": "Aceite y Fluidos",
+          "subtitle": "Prevención y Rendimiento",
+          "desc": "Mantenimiento preventivo esencial. Reemplazo de fluidos vitales con insumos premium para proteger el motor de tu vehículo."
+        },
+        "brakes": {
+          "title": "Reparación de Frenos",
+          "subtitle": "Seguridad Sin Concesiones",
+          "desc": "Inspección, diagnóstico y reemplazo de componentes de fricción y sistemas hidráulicos para una frenada segura."
+        },
+        "diagnostic": {
+          "title": "Diagnóstico Integral",
+          "subtitle": "Tecnología de Punta",
+          "desc": "Lectura de computadoras a bordo y escaneo multisistema para localizar fallas electrónicas con precisión milimétrica."
+        },
+        "suspension": {
+          "title": "Suspensión y Dirección",
+          "subtitle": "Control y Estabilidad",
+          "desc": "Alineación, balanceo y sustitución de piezas de desgaste en el tren de rodaje para restaurar el confort de conducción."
+        }
+      },
+      "deepDives": {
+        "oil": {
+          "title": "Aceite y Fluidos",
+          "subtitle": "Prevención y Rendimiento",
+          "text": "El aceite es la sangre de su motor. Proveemos un servicio integral de lubricación utilizando aceites 100% sintéticos de marcas líderes que superan las especificaciones del fabricante (OEM). Nuestro protocolo asegura la máxima limpieza y protección térmica de las piezas móviles de su vehículo.",
+          "specs": [
+            "Cambio de aceite y filtro con grados de viscosidad precisos para el clima de Denver.",
+            "Reposición de líquido refrigerante (Anticongelante) y revisión de fugas en el radiador.",
+            "Reemplazo o purgado de líquido de transmisión y líquido de dirección hidráulica.",
+            "Inspección ecológica: disposición segura de los fluidos usados."
+          ]
+        },
+        "brakes": {
+          "title": "Reparación de Sistema de Frenos",
+          "subtitle": "Seguridad Sin Concesiones",
+          "text": "La capacidad de detenerse a tiempo no es negociable. Realizamos intervenciones completas en el sistema de frenado, desde sustituciones rutinarias de pastillas hasta complejas reparaciones en el tren hidráulico, asegurando que tu vehículo responda instantáneamente al pedal.",
+          "specs": [
+            "Instalación de balatas y pastillas de calidad OEM (cerámicas o semi-metálicas).",
+            "Rectificación experta o reemplazo directo de discos (rotores) y tambores.",
+            "Inspección de calipers, mangueras y cilindros maestros para descartar bloqueos.",
+            "Cambio y presurización del líquido de frenos (DOT 3 / DOT 4)."
+          ]
+        },
+        "diagnostic": {
+          "title": "Diagnóstico Integral y Electrónica",
+          "subtitle": "Tecnología de Punta",
+          "text": "Los autos modernos son redes de computadoras sobre ruedas. Cuando se enciende la luz de 'Check Engine', utilizamos herramientas computarizadas y osciloscopios de última generación para interpretar códigos difusos y aislar problemas eléctricos sin adivinanzas.",
+          "specs": [
+            "Escaneo bidireccional y lectura de datos OBD-II en tiempo real.",
+            "Evaluación profunda del sistema de inyección, bujías y bobinas de encendido.",
+            "Pruebas de alternador, batería y caída de voltaje en redes complejas.",
+            "Solución integral para monitores de emisiones e inspección de gases."
+          ]
+        },
+        "suspension": {
+          "title": "Geometría, Dirección y Suspensión",
+          "subtitle": "Control y Estabilidad",
+          "text": "Evite el desgaste irregular de los neumáticos y recupere el confort de viaje. Un sistema de suspensión robusto es crucial para tolerar el terreno de la ciudad y absorber el impacto sin transferirlo a la cabina ni comprometer la dirección asistida.",
+          "specs": [
+            "Diagnóstico y reemplazo de amortiguadores y resortes defectuosos.",
+            "Revisión de bujes de horquilla, terminales de dirección y rótulas.",
+            "Corrección de ruidos ('clunks') en topes, barras estabilizadoras y ejes homocinéticos.",
+            "Preparación técnica previa a cualquier servicio de alineación geométrica y balanceo."
+          ]
+        }
+      }
+    },
+    "howItWorks": {
+      "tag": "Simplicidad Total",
+      "titlePart1": "¿CÓMO",
+      "titlePart2": "FUNCIONA?",
+      "subtitle": "Nosotros nos encargamos de todo.",
+      "steps": {
+        "1": { "title": "SOLICITA EL SERVICIO", "desc": "Usa nuestra terminal digital para decirnos qué necesita tu auto." },
+        "2": { "title": "NOSOTROS LLEGAMOS", "desc": "Nuestro experto llega a Denver con tecnología de taller avanzado." },
+        "3": { "title": "¡TRABAJO LISTO!", "desc": "Reparamos, validamos y tu vehículo queda impecable." },
+        "4": { "title": "EVALUACIÓN CONTINUA", "desc": "Usted nos evalúa y mejoramos. Su retroalimentación es clave." }
+      },
+      "status": "Status en Vivo",
+      "techOnWay": "Técnico en camino"
+    },
+    "trust": {
+      "titlePart1": "CONFIANZA",
+      "titlePart2": "Y TRANSPARENCIA",
+      "titlePart3": "EN",
+      "titlePart4": "DENVER",
+      "description": "Entendemos lo valioso que es tu tiempo. Operamos en toda el área metropolitana con precisión y garantía total.",
+      "availability": "Disponibilidad",
+      "mobileFlexible": "Móvil & Flexible",
+      "satisfaction": "Satisfacción"
+    },
+    "cta": {
+      "titlePart1": "¿LISTO PARA",
+      "titlePart2": "REPARAR TU",
+      "titlePart3": "VEHÍCULO?",
+      "description": "Únete a cientos de clientes que ya disfrutan de la libertad de un taller que llega a ellos.",
+      "startNow": "COMENZAR AHORA",
+      "callDirect": "LLAMAR DIRECTO"
+    }
+  },
+  "layouts": {
+    "admin": {
+      "dashboard": "Dashboard",
+      "services": "Servicios",
+      "techs": "Técnicos",
+      "admins": "Admins",
+      "templates": "Plantillas",
+      "rules": "Reglas",
+      "catalog": "Catálogo",
+      "settings": "Ajustes",
+      "notifications": "Avisos",
+      "globalManagement": "Gestión Global",
+      "adminCentral": "Admin Central"
+    },
+    "tech": {
+      "terminal": "TERMINAL",
+      "missions": "MISIONES",
+      "history": "HISTORIAL",
+      "profile": "PERFIL",
+      "operationsConsole": "Consola de Operaciones",
+      "terminalConsole": "Consola de Terminal",
+      "statusOnline": "Estado: Online"
+    }
+  }
+}

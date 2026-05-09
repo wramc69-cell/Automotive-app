@@ -1,16 +1,18 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Wrench, LogOut, ChevronRight, LayoutDashboard, UserCircle, History, Zap, Settings, Shield } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export function TechLayout() {
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const navItems = [
-        { to: '/tech', icon: <LayoutDashboard size={22} />, label: 'TERMINAL', end: true },
-        { to: '/tech/requests', icon: <Wrench size={22} />, label: 'MISIONES' },
-        { to: '/tech/history', icon: <History size={22} />, label: 'HISTORIAL' },
-        { to: '/tech/profile', icon: <UserCircle size={22} />, label: 'PERFIL' },
+        { to: '/tech', icon: <LayoutDashboard size={22} />, label: t('layouts.tech.terminal'), end: true },
+        { to: '/tech/requests', icon: <Wrench size={22} />, label: t('layouts.tech.missions') },
+        { to: '/tech/history', icon: <History size={22} />, label: t('layouts.tech.history') },
+        { to: '/tech/profile', icon: <UserCircle size={22} />, label: t('layouts.tech.profile') },
     ];
 
     const handleLogout = async () => {
@@ -33,13 +35,13 @@ export function TechLayout() {
                             </div>
                             <div className="space-y-1">
                                 <h1 className="text-xl font-black italic tracking-tighter text-white leading-none">DENVER <span className="text-primary block not-italic">Tech Hub</span></h1>
-                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest italic">Operations Console</span>
+                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest italic">{t('layouts.tech.operationsConsole')}</span>
                             </div>
                         </div>
 
                         {/* Navigation Terminal */}
                         <nav className="flex flex-col gap-2">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] mb-4 px-3">Terminal Console</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] mb-4 px-3">{t('layouts.tech.terminalConsole')}</p>
                             {navItems.map((item) => (
                                 <NavLink
                                     key={item.to}
@@ -78,7 +80,7 @@ export function TechLayout() {
                         <div className="p-5 bg-white/5 rounded-3xl border border-white/5 space-y-4 transition-all hover:bg-white/10">
                             <div className="flex items-center gap-3">
                                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500"></div>
-                                <span className="text-[10px] font-bold text-emerald-500 tracking-widest uppercase italic">Estado: Online</span>
+                                <span className="text-[10px] font-bold text-emerald-500 tracking-widest uppercase italic">{t('layouts.tech.statusOnline')}</span>
                             </div>
                             <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                                 <div className="bg-primary h-full w-[85%] rounded-full shadow-lg shadow-primary/20"></div>
@@ -90,7 +92,7 @@ export function TechLayout() {
                             className="w-full h-14 flex items-center justify-center gap-3 rounded-2xl bg-rose-500/5 hover:bg-rose-500 text-slate-500 hover:text-white transition-all duration-700 font-bold text-xs tracking-widest group/logout"
                         >
                             <LogOut size={20} className="group-hover/logout:-translate-x-1 transition-transform" />
-                            CERRAR SESIÓN
+                            {t('common.logout')}
                         </button>
                     </div>
                 </div>

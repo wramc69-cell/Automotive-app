@@ -3,8 +3,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/Button';
 import { ShieldCheck, Zap, Lock, Menu, X, LogOut, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from '../components/ui/LanguageSelector';
 
 export function GlobalLayout() {
+    const { t } = useTranslation();
     const { user, profile, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -43,13 +46,13 @@ export function GlobalLayout() {
                         <span className="text-[16px] font-black tracking-tight uppercase text-white">DENVER <span className="text-primary italic">Auto</span></span>
                     </Link>
 
-                    <div className="flex items-center gap-12">
+                    <div className="flex items-center gap-6 lg:gap-12">
                         {/* Desktop Navigation Menu */}
                         <nav className="hidden lg:flex items-center gap-10">
                             <div className="flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.3em] text-white/70">
-                                <a href="#servicios" className="hover:text-primary transition-colors italic">Servicios</a>
-                                <a href="#como-funciona" className="hover:text-primary transition-colors italic">Cómo Funciona</a>
-                                <a href="#cobertura" className="hover:text-primary transition-colors italic">Cobertura</a>
+                                <a href="#servicios" className="hover:text-primary transition-colors italic">{t('nav.services')}</a>
+                                <a href="#como-funciona" className="hover:text-primary transition-colors italic">{t('nav.howItWorks')}</a>
+                                <a href="#cobertura" className="hover:text-primary transition-colors italic">{t('nav.coverage')}</a>
                             </div>
 
                             <div className="h-5 w-[1px] bg-white/10 mx-2"></div>
@@ -57,11 +60,11 @@ export function GlobalLayout() {
                             {!user ? (
                                 <div className="flex items-center gap-6">
                                     <Link to="/auth/login" className="text-[11px] font-black uppercase tracking-[0.4em] text-white hover:text-primary transition-colors italic">
-                                        LOGIN
+                                        {t('nav.login')}
                                     </Link>
                                     <Link to="/auth/register">
                                         <Button className="rounded-full px-8 h-10 bg-primary text-slate-950 font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white transition-all shadow-2xl shadow-primary/20 italic">
-                                            EXPLORAR
+                                            {t('nav.explore')}
                                         </Button>
                                     </Link>
                                 </div>
@@ -81,6 +84,8 @@ export function GlobalLayout() {
                             )}
                         </nav>
 
+                        <LanguageSelector />
+
                         {/* Mobile Toggle */}
                         <button 
                             className={`lg:hidden w-10 h-10 rounded-lg flex items-center justify-center transition-all bg-white/5 text-white backdrop-blur-md border border-white/10`}
@@ -97,22 +102,22 @@ export function GlobalLayout() {
                     ${mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}
                 `}>
                     <nav className="flex flex-col items-center gap-8">
-                        <a href="#servicios" className="text-xl font-black text-white uppercase tracking-[0.3em] italic">Servicios</a>
-                        <a href="#como-funciona" className="text-xl font-black text-white uppercase tracking-[0.3em] italic">Mecánica</a>
-                        <a href="#cobertura" className="text-xl font-black text-white uppercase tracking-[0.3em] italic">Red</a>
+                        <a href="#servicios" className="text-xl font-black text-white uppercase tracking-[0.3em] italic">{t('nav.services')}</a>
+                        <a href="#como-funciona" className="text-xl font-black text-white uppercase tracking-[0.3em] italic">{t('nav.howItWorks')}</a>
+                        <a href="#cobertura" className="text-xl font-black text-white uppercase tracking-[0.3em] italic">{t('nav.coverage')}</a>
                         
                         <div className="h-[1px] w-24 bg-primary/20"></div>
                         
                         {!user ? (
                             <div className="flex flex-col items-center gap-6">
-                                <Link to="/auth/login" className="text-lg font-black text-primary uppercase tracking-[0.4em] italic">INGRESAR</Link>
+                                <Link to="/auth/login" className="text-lg font-black text-primary uppercase tracking-[0.4em] italic">{t('nav.login')}</Link>
                                 <Link to="/auth/register">
-                                    <Button size="lg" className="rounded-xl px-12 bg-primary text-slate-950 font-black tracking-[0.2em] h-14">REGISTRO</Button>
+                                    <Button size="lg" className="rounded-xl px-12 bg-primary text-slate-950 font-black tracking-[0.2em] h-14">{t('auth.register.createAccount')}</Button>
                                 </Link>
-                                <Link to="/auth/login?role=ADMIN" className="text-[9px] text-slate-600 font-bold uppercase tracking-[0.5em] mt-4 italic">ACCESO_CENTRAL</Link>
+                                <Link to="/auth/login?role=ADMIN" className="text-[9px] text-slate-600 font-bold uppercase tracking-[0.5em] mt-4 italic">{t('layouts.admin.adminCentral')}</Link>
                             </div>
                         ) : (
-                            <button onClick={handleLogout} className="text-rose-500 text-lg font-black uppercase tracking-[0.4em] italic">FINALIZAR_SESIÓN</button>
+                            <button onClick={handleLogout} className="text-rose-500 text-lg font-black uppercase tracking-[0.4em] italic">{t('common.logout')}</button>
                         )}
                     </nav>
                 </div>
@@ -137,39 +142,39 @@ export function GlobalLayout() {
                                 <span className="text-xl font-black tracking-tighter uppercase italic">DENVER <span className="text-primary not-italic">Auto_Hub</span></span>
                             </Link>
                             <p className="text-slate-500 text-[11px] font-bold leading-relaxed uppercase tracking-wider italic opacity-80">
-                                LIDERANDO LA REVOLUCIÓN DE LA MECÁNICA MÓVIL EN COLORADO.
+                                {t('landing.hero.badge').toUpperCase()}
                             </p>
                             <div className="flex gap-3">
                                 {[1, 2, 3].map(i => (
-                                    <div key={i} className="w-8 h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center text-slate-500 hover:text-primary hover:border-primary/30 hover:bg-white/10 transition-all cursor-pointer">
-                                        <div className="w-2 h-2 bg-current rounded-full"></div>
-                                    </div>
-                                ))}
+                                     <div key={i} className="w-8 h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center text-slate-500 hover:text-primary hover:border-primary/30 hover:bg-white/10 transition-all cursor-pointer">
+                                         <div className="w-2 h-2 bg-current rounded-full"></div>
+                                     </div>
+                                 ))}
                             </div>
                         </div>
                         <div>
-                            <h4 className="text-white font-black text-[11px] uppercase tracking-[0.6em] mb-10 italic">Operaciones</h4>
+                            <h4 className="text-white font-black text-[11px] uppercase tracking-[0.6em] mb-10 italic">{t('nav.operations')}</h4>
                             <ul className="space-y-5 text-slate-500 text-[12px] font-black uppercase tracking-[0.2em] italic">
-                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> Oil_Service</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> Brake_System</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> Diagnostic_Scan</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> Power_Grid</a></li>
+                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> {t('landing.services.items.oil.title')}</a></li>
+                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> {t('landing.services.items.brakes.title')}</a></li>
+                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> {t('landing.services.items.diagnostic.title')}</a></li>
+                                <li><a href="#" className="hover:text-primary transition-colors flex items-center gap-3"> <div className="w-1 h-1 bg-primary rounded-full"></div> {t('landing.services.items.suspension.title')}</a></li>
                             </ul>
                         </div>
 
                         <div>
-                            <h4 className="text-white font-black text-[11px] uppercase tracking-[0.6em] mb-10 italic">Protocolos</h4>
+                            <h4 className="text-white font-black text-[11px] uppercase tracking-[0.6em] mb-10 italic">{t('nav.protocols')}</h4>
                             <ul className="space-y-5 text-slate-500 text-[12px] font-black uppercase tracking-[0.2em] italic">
-                                <li><Link to="/auth/login?role=ADMIN" className="hover:text-white transition-colors">Admin_Command</Link></li>
-                                <li><Link to="/auth/register?role=TECH" className="hover:text-white transition-colors">Tech_Deployment</Link></li>
-                                <li><a href="#" className="hover:text-white transition-colors">About_HQ</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Privacy_Protocol</a></li>
+                                <li><Link to="/auth/login?role=ADMIN" className="hover:text-white transition-colors">{t('nav.adminCommand')}</Link></li>
+                                <li><Link to="/auth/register?role=TECH" className="hover:text-white transition-colors">{t('nav.techDeployment')}</Link></li>
+                                <li><a href="#" className="hover:text-white transition-colors">{t('nav.aboutHq')}</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">{t('nav.privacyProtocol')}</a></li>
                             </ul>
                         </div>
 
                         <div className="p-8 bg-white/5 rounded-2xl border border-white/5 relative overflow-hidden group/cta">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-primary/20 transition-all"></div>
-                            <h4 className="text-white font-black text-[9px] uppercase tracking-[0.6em] mb-6 italic relative z-10">Asistencia_Radar</h4>
+                            <h4 className="text-white font-black text-[9px] uppercase tracking-[0.6em] mb-6 italic relative z-10">{t('nav.assistanceRadar')}</h4>
                             <div className="space-y-6 relative z-10">
                                 <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-slate-950 shadow-2xl shadow-primary/40 group-hover:scale-110 transition-transform">

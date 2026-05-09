@@ -1,19 +1,21 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { BarChart3, Users, Settings, Wrench, Send, ClipboardCheck, GitBranch, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export function AdminLayout() {
     const { logout } = useAuth();
+    const { t } = useTranslation();
     const navItems = [
-        { to: '/admin', icon: <BarChart3 size={20} />, label: 'Dashboard', end: true },
-        { to: '/admin/requests', icon: <Wrench size={20} />, label: 'Servicios' },
-        { to: '/admin/techs', icon: <Users size={20} />, label: 'Técnicos' },
-        { to: '/admin/admins', icon: <ShieldCheck size={20} />, label: 'Admins' },
-        { to: '/admin/checklist-templates', icon: <ClipboardCheck size={20} />, label: 'Plantillas' },
-        { to: '/admin/template-rules', icon: <GitBranch size={20} />, label: 'Reglas' },
-        { to: '/admin/catalog', icon: <Settings size={20} />, label: 'Catálogo' },
-        { to: '/admin/config', icon: <Settings size={20} />, label: 'Ajustes' },
-        { to: '/admin/notifications', icon: <Send size={20} />, label: 'Avisos' }
+        { to: '/admin', icon: <BarChart3 size={20} />, label: t('layouts.admin.dashboard'), end: true },
+        { to: '/admin/requests', icon: <Wrench size={20} />, label: t('layouts.admin.services') },
+        { to: '/admin/techs', icon: <Users size={20} />, label: t('layouts.admin.techs') },
+        { to: '/admin/admins', icon: <ShieldCheck size={20} />, label: t('layouts.admin.admins') },
+        { to: '/admin/checklist-templates', icon: <ClipboardCheck size={20} />, label: t('layouts.admin.templates') },
+        { to: '/admin/template-rules', icon: <GitBranch size={20} />, label: t('layouts.admin.rules') },
+        { to: '/admin/catalog', icon: <Settings size={20} />, label: t('layouts.admin.catalog') },
+        { to: '/admin/config', icon: <Settings size={20} />, label: t('layouts.admin.settings') },
+        { to: '/admin/notifications', icon: <Send size={20} />, label: t('layouts.admin.notifications') }
     ];
 
     return (
@@ -28,12 +30,12 @@ export function AdminLayout() {
                             </div>
                             <div>
                                 <h2 className="text-xl font-black italic tracking-tighter text-white leading-none">DENVER</h2>
-                                <p className="text-[9px] font-bold text-primary tracking-widest uppercase mt-1">Admin Central</p>
+                                <p className="text-[9px] font-bold text-primary tracking-widest uppercase mt-1">{t('layouts.admin.adminCentral')}</p>
                             </div>
                         </div>
 
                         <nav className="flex flex-col gap-2">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] mb-4 px-3">Gestión Global</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] mb-4 px-3">{t('layouts.admin.globalManagement')}</p>
                             {navItems.map((item) => (
                                 <NavLink
                                     key={item.to}
@@ -66,7 +68,7 @@ export function AdminLayout() {
                             className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-slate-400 hover:text-white hover:bg-rose-500 transition-all duration-700 font-bold text-xs tracking-widest group"
                         >
                             <Send size={18} className="rotate-180 group-hover:-translate-x-2 transition-transform" />
-                            CERRAR SESIÓN
+                            {t('common.logout')}
                         </button>
                     </div>
                 </div>

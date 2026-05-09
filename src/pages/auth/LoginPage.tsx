@@ -6,8 +6,11 @@ import { Card, CardContent } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
 import { supabase } from '../../lib/supabase';
 import { User, ShieldCheck, Zap, Lock, Eye, EyeOff, Wrench, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from '../../components/ui/LanguageSelector';
 
 export function LoginPage() {
+    const { t } = useTranslation();
     const { toast } = useToast();
     const location = useLocation();
     const [loading, setLoading] = useState(false);
@@ -33,7 +36,7 @@ export function LoginPage() {
         try {
             const { data, error } = await supabase.auth.signInWithPassword({ email: email.toLowerCase(), password });
             if (error) throw error;
-            toast({ title: 'Ingreso exitoso', description: 'Cargando tu perfil...', type: 'success' });
+            toast({ title: t('auth.login.successTitle'), description: t('auth.login.successDesc'), type: 'success' });
             if (data.user) {
                 const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', data.user.id).single();
                 const userRole = profile?.role || data.user.user_metadata?.role;
@@ -42,8 +45,8 @@ export function LoginPage() {
                 else navigate('/app');
             }
         } catch (error: any) {
-            setError(error.message || 'Credenciales inválidas');
-            toast({ title: 'Error de ingreso', description: error.message || 'Credenciales inválidas', type: 'error' });
+            setError(error.message || t('auth.login.invalidCredentials'));
+            toast({ title: t('auth.login.errorTitle'), description: error.message || t('auth.login.invalidCredentials'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -51,6 +54,10 @@ export function LoginPage() {
 
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
+            <div className="absolute top-6 right-6 z-[100]">
+                <LanguageSelector />
+            </div>
+
             {/* Professional Background Elements */}
             <div className="absolute inset-0">
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full"></div>
@@ -68,10 +75,10 @@ export function LoginPage() {
                     
                     <div className="space-y-3">
                         <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter italic leading-none">
-                        CENTRAL <br />
-                        <span className="text-primary not-italic">COMMAND</span>
+                        {t('auth.login.title').split(' ')[0]} <br />
+                        <span className="text-primary not-italic">{t('auth.login.title').split(' ').slice(1).join(' ')}</span>
                     </h1>
-                        <p className="text-slate-500 text-lg font-medium">Ingresa tus credenciales para continuar</p>
+                        <p className="text-slate-500 text-lg font-medium">{t('auth.login.subtitle')}</p>
                     </div>
                 </div>
 
@@ -82,13 +89,13 @@ export function LoginPage() {
 
                     <div className="space-y-8">
                         <div className="space-y-2">
-                            <h2 className="text-xl font-black text-white uppercase tracking-widest italic leading-none">Protocolo de Acceso</h2>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em] italic">Ingrese credenciales de terminal</p>
+                            <h2 className="text-xl font-black text-white uppercase tracking-widest italic leading-none">{t('auth.login.protocolTitle')}</h2>
+                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em] italic">{t('auth.login.protocolSubtitle')}</p>
                         </div>
 
                         <form onSubmit={handleLogin} className="space-y-6">
                             <Input
-                                label="Identificador de Usuario"
+                                label={t('auth.login.userId')}
                                 type="email"
                                 placeholder="NOMBRE@AUTO_HUB.SYS"
                                 value={email}
@@ -97,7 +104,7 @@ export function LoginPage() {
                             />
 
                             <Input
-                                label="Código de Acceso"
+                                label={t('auth.login.accessCode')}
                                 type="password"
                                 placeholder="••••••••"
                                 value={password}
@@ -117,14 +124,14 @@ export function LoginPage() {
                                 className="w-full h-14" 
                                 loading={loading}
                             >
-                                <Lock size={16} className="mr-2" /> INICIAR PROTOCOLO
+                                <Lock size={16} className="mr-2" /> {t('auth.login.startProtocol').toUpperCase()}
                             </Button>
                         </form>
 
                         <div className="pt-8 border-t border-white/5 flex flex-col items-center gap-6">
                             <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.4em] italic leading-tight text-center">
-                                ¿No tienes acceso? <br />
-                                <Link to="/auth/register" className="text-primary hover:text-white transition-colors">Solicitar Despliegue de Unidad</Link>
+                                {t('auth.login.noAccess')} <br />
+                                <Link to="/auth/register" className="text-primary hover:text-white transition-colors">{t('auth.login.requestDeployment')}</Link>
                             </p>
                         </div>
                     </div>
@@ -136,13 +143,13 @@ export function LoginPage() {
                         to="/" 
                         className="inline-flex items-center gap-3 text-sm font-bold text-slate-600 hover:text-white transition-all group/back"
                     >
-                        <ArrowLeft size={18} className="group-hover/back:-translate-x-2 transition-transform" /> Regresar al inicio
+                        <ArrowLeft size={18} className="group-hover/back:-translate-x-2 transition-transform" /> {t('common.backToHome')}
                     </Link>
                 </div>
             </div>
 
             <div className="absolute bottom-10 text-center w-full">
-                <p className="text-[10px] font-bold text-slate-800 uppercase tracking-[0.6em]">Denver Mobile Auto Care — © 2026</p>
+                <p className="text-[10px] font-bold text-slate-800 uppercase tracking-[0.6em]">{t('common.copyright')}</p>
             </div>
         </div>
     );

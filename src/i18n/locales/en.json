@@ -1,0 +1,251 @@
+{
+  "common": {
+    "brandName": "Denver Auto Care",
+    "back": "Back",
+    "continue": "Continue",
+    "backToHome": "Back to Home",
+    "copyright": "Denver Mobile Auto Care — © 2026",
+    "logout": "Logout",
+    "loading": "Loading...",
+    "error": "Error"
+  },
+  "nav": {
+    "services": "Services",
+    "howItWorks": "How it Works",
+    "coverage": "Coverage",
+    "login": "Login",
+    "explore": "Explore",
+    "operations": "Operations",
+    "protocols": "Protocols",
+    "adminCommand": "Admin Command",
+    "techDeployment": "Tech Deployment",
+    "aboutHq": "About HQ",
+    "privacyProtocol": "Privacy Protocol",
+    "assistanceRadar": "Assistance Radar"
+  },
+  "auth": {
+    "login": {
+      "title": "Central Command",
+      "subtitle": "Enter your credentials to continue",
+      "protocolTitle": "Access Protocol",
+      "protocolSubtitle": "Enter terminal credentials",
+      "userId": "User Identifier",
+      "accessCode": "Access Code",
+      "startProtocol": "Start Protocol",
+      "noAccess": "Don't have access?",
+      "requestDeployment": "Request Unit Deployment",
+      "successTitle": "Login successful",
+      "successDesc": "Loading your profile...",
+      "errorTitle": "Login error",
+      "invalidCredentials": "Invalid credentials"
+    },
+    "register": {
+      "joinTeam": "Join the team",
+      "createAccount": "Create my account",
+      "step1Title": "Step 01 — Credentials",
+      "step2Title": "Step 02 — Personal Information",
+      "step3Title": "Step 03 — Operational Details",
+      "uploadProfilePhoto": "Upload profile photo",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "phone": "Contact Phone",
+      "address": "Residential Address",
+      "city": "City",
+      "state": "State",
+      "zip": "ZIP",
+      "birthDate": "Date of Birth",
+      "vehicleInfo": "Vehicle Information",
+      "vehiclePhoto": "Vehicle Photo",
+      "plate": "License Plate",
+      "color": "Color",
+      "make": "Make",
+      "model": "Model",
+      "technicalSpecialties": "Technical Specialties",
+      "workAuth": "Work Authorization",
+      "legalStatusConfirm": "I confirm legal status in the US",
+      "privacyTitle": "Privacy Notice",
+      "privacyAccept": "I accept the processing of my personal data according to the terms of service.",
+      "registering": "Registering...",
+      "finishRegistration": "Finish Registration",
+      "successTitle": "SUCCESSFUL REGISTRATION!",
+      "successTechDesc": "Your profile has been sent for approval. We will notify you once you are activated.",
+      "successCustomerDesc": "Your account has been created. You can now log in and schedule services.",
+      "alreadyHaveAccount": "Already have an account?",
+      "fileTooLargeTitle": "File too large",
+      "fileTooLargeDesc": "The photo should not exceed 5 MB.",
+      "vehicleFileTooLargeDesc": "The vehicle photo should not exceed 5 MB.",
+      "missingDataTitle": "Missing data",
+      "credentialsMissingDesc": "Please enter your email and password.",
+      "weakPasswordTitle": "Weak password",
+      "weakPasswordDesc": "Must be at least 6 characters.",
+      "locationMissingDesc": "Please complete all location and contact fields.",
+      "attention": "Attention",
+      "privacyConsentRequired": "You must accept the privacy notice.",
+      "errorGeneric": "Could not complete registration"
+    }
+  },
+  "landing": {
+    "hero": {
+      "tag": "PREMIUM MOBILE MECHANICS IN COLORADO",
+      "titlePart1": "THE POWER",
+      "titlePart2": "OF REPAIRING",
+      "titlePart3": "ANYWHERE.",
+      "description": "Forget waiting rooms. We bring certified shop technology and equipment directly to your location.",
+      "requestAppointment": "REQUEST APPOINTMENT"
+    },
+    "roles": {
+      "client": {
+        "tag": "Client Mission",
+        "titlePart1": "Request",
+        "titlePart2": "Assistance",
+        "description": "Concierge access. Book premium services with a single tap.",
+        "button": "ENTER PROTOCOL"
+      },
+      "tech": {
+        "tag": "Elite Unit",
+        "titlePart1": "I am an",
+        "titlePart2": "Engineer",
+        "description": "Join the tactical fleet. Digital Denver management.",
+        "button": "DEPLOY UNIT"
+      },
+      "admin": {
+        "tag": "Central Command",
+        "titlePart1": "MISSION",
+        "titlePart2": "CONTROL",
+        "description": "Real-time metrics and fleet dispatch.",
+        "button": "RESTRICTED ACCESS"
+      }
+    },
+    "services": {
+      "tag": "OUR SPECIALTIES",
+      "title": "Professional Services",
+      "viewDetails": "View Details",
+      "bookNow": "Book this service",
+      "items": {
+        "oil": {
+          "title": "Oil and Fluids",
+          "subtitle": "Prevention and Performance",
+          "desc": "Essential preventive maintenance. Vital fluid replacement with premium supplies to protect your vehicle's engine."
+        },
+        "brakes": {
+          "title": "Brake Repair",
+          "subtitle": "Uncompromising Safety",
+          "desc": "Inspection, diagnosis, and replacement of friction components and hydraulic systems for safe braking."
+        },
+        "diagnostic": {
+          "title": "Comprehensive Diagnostic",
+          "subtitle": "Cutting-edge Technology",
+          "desc": "On-board computer reading and multi-system scanning to pinpoint electronic faults with millimetric precision."
+        },
+        "suspension": {
+          "title": "Suspension and Steering",
+          "subtitle": "Control and Stability",
+          "desc": "Alignment, balancing, and replacement of wear parts in the running gear to restore driving comfort."
+        }
+      },
+      "deepDives": {
+        "oil": {
+          "title": "Oil and Fluids",
+          "subtitle": "Prevention and Performance",
+          "text": "Oil is the blood of your engine. We provide a comprehensive lubrication service using 100% synthetic oils from leading brands that exceed manufacturer specifications (OEM). Our protocol ensures maximum cleanliness and thermal protection for your vehicle's moving parts.",
+          "specs": [
+            "Oil and filter change with precise viscosity grades for Denver's climate.",
+            "Coolant (Antifreeze) replenishment and radiator leak check.",
+            "Transmission fluid and hydraulic steering fluid replacement or flushing.",
+            "Eco-friendly inspection: safe disposal of used fluids."
+          ]
+        },
+        "brakes": {
+          "title": "Brake System Repair",
+          "subtitle": "Uncompromising Safety",
+          "text": "The ability to stop on time is non-negotiable. We perform complete interventions on the braking system, from routine pad replacements to complex hydraulic train repairs, ensuring your vehicle responds instantly to the pedal.",
+          "specs": [
+            "Installation of OEM quality brake pads (ceramic or semi-metallic).",
+            "Expert rectification or direct replacement of discs (rotors) and drums.",
+            "Inspection of calipers, hoses, and master cylinders to rule out blockages.",
+            "Brake fluid change and pressurization (DOT 3 / DOT 4)."
+          ]
+        },
+        "diagnostic": {
+          "title": "Comprehensive Diagnostic and Electronics",
+          "subtitle": "Cutting-edge Technology",
+          "text": "Modern cars are computer networks on wheels. When the 'Check Engine' light comes on, we use computerized tools and state-of-the-art oscilloscopes to interpret fuzzy codes and isolate electrical problems without guesswork.",
+          "specs": [
+            "Bidirectional scanning and real-time OBD-II data reading.",
+            "Deep evaluation of the injection system, spark plugs, and ignition coils.",
+            "Alternator, battery, and voltage drop tests in complex networks.",
+            "Comprehensive solution for emissions monitors and gas inspection."
+          ]
+        },
+        "suspension": {
+          "title": "Geometry, Steering, and Suspension",
+          "subtitle": "Control and Stability",
+          "text": "Avoid uneven tire wear and regain travel comfort. A robust suspension system is crucial to tolerate the city's terrain and absorb impact without transferring it to the cabin or compromising power steering.",
+          "specs": [
+            "Diagnosis and replacement of defective shocks and springs.",
+            "Review of control arm bushings, tie rod ends, and ball joints.",
+            "Correction of noises ('clunks') in bumps, sway bars, and CV axles.",
+            "Technical preparation prior to any geometric alignment and balancing service."
+          ]
+        }
+      }
+    },
+    "howItWorks": {
+      "tag": "Total Simplicity",
+      "titlePart1": "HOW DOES IT",
+      "titlePart2": "WORK?",
+      "subtitle": "We take care of everything.",
+      "steps": {
+        "1": { "title": "REQUEST SERVICE", "desc": "Use our digital terminal to tell us what your car needs." },
+        "2": { "title": "WE ARRIVE", "desc": "Our expert arrives in Denver with advanced shop technology." },
+        "3": { "title": "JOB DONE!", "desc": "We repair, validate, and your vehicle is left flawless." },
+        "4": { "title": "CONTINUOUS EVALUATION", "desc": "You evaluate us and we improve. Your feedback is key." }
+      },
+      "status": "Live Status",
+      "techOnWay": "Technician on the way"
+    },
+    "trust": {
+      "titlePart1": "TRUST",
+      "titlePart2": "AND TRANSPARENCY",
+      "titlePart3": "IN",
+      "titlePart4": "DENVER",
+      "description": "We understand how valuable your time is. We operate across the metropolitan area with precision and total guarantee.",
+      "availability": "Availability",
+      "mobileFlexible": "Mobile & Flexible",
+      "satisfaction": "Satisfaction"
+    },
+    "cta": {
+      "titlePart1": "READY TO",
+      "titlePart2": "REPAIR YOUR",
+      "titlePart3": "VEHICLE?",
+      "description": "Join hundreds of customers who already enjoy the freedom of a shop that comes to them.",
+      "startNow": "START NOW",
+      "callDirect": "CALL DIRECT"
+    }
+  },
+  "layouts": {
+    "admin": {
+      "dashboard": "Dashboard",
+      "services": "Services",
+      "techs": "Technicians",
+      "admins": "Admins",
+      "templates": "Templates",
+      "rules": "Rules",
+      "catalog": "Catalog",
+      "settings": "Settings",
+      "notifications": "Notifications",
+      "globalManagement": "Global Management",
+      "adminCentral": "Admin Central"
+    },
+    "tech": {
+      "terminal": "TERMINAL",
+      "missions": "MISSIONS",
+      "history": "HISTORY",
+      "profile": "PROFILE",
+      "operationsConsole": "Operations Console",
+      "terminalConsole": "Terminal Console",
+      "statusOnline": "Status: Online"
+    }
+  }
+}
+

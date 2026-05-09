@@ -7,8 +7,11 @@ import { useToast } from '../../components/ui/Toast';
 import { supabase } from '../../lib/supabase';
 import { supabaseAdmin } from '../../lib/supabaseAdmin';
 import { Mail, ArrowLeft, User, Wrench, Camera, Car, ShieldCheck, ChevronRight, CheckCircle2, Lock, Eye, EyeOff, MapPin, Calendar, Briefcase, FileText } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from '../../components/ui/LanguageSelector';
 
 export function RegisterPage() {
+    const { t } = useTranslation();
     const { toast } = useToast();
     const location = useLocation();
     const navigate = useNavigate();
@@ -56,7 +59,7 @@ export function RegisterPage() {
         const file = e.target.files?.[0];
         if (!file) return;
         if (file.size > 5 * 1024 * 1024) {
-            toast({ title: 'Archivo muy grande', description: 'La foto no debe superar 5 MB.', type: 'error' });
+            toast({ title: t('auth.register.fileTooLargeTitle'), description: t('auth.register.fileTooLargeDesc'), type: 'error' });
             return;
         }
         setPhotoFile(file);
@@ -69,7 +72,7 @@ export function RegisterPage() {
         const file = e.target.files?.[0];
         if (!file) return;
         if (file.size > 5 * 1024 * 1024) {
-            toast({ title: 'Archivo muy grande', description: 'La foto del vehículo no debe superar 5 MB.', type: 'error' });
+            toast({ title: t('auth.register.fileTooLargeTitle'), description: t('auth.register.vehicleFileTooLargeDesc'), type: 'error' });
             return;
         }
         setVehiclePhotoFile(file);
@@ -81,17 +84,17 @@ export function RegisterPage() {
     const nextStep = () => {
         if (step === 1) {
             if (!email || !password) {
-                toast({ title: 'Datos faltantes', description: 'Ingresa tu correo y contraseña.', type: 'error' });
+                toast({ title: t('auth.register.missingDataTitle'), description: t('auth.register.credentialsMissingDesc'), type: 'error' });
                 return;
             }
             if (password.length < 6) {
-                toast({ title: 'Contraseña débil', description: 'Debe tener al menos 6 caracteres.', type: 'error' });
+                toast({ title: t('auth.register.weakPasswordTitle'), description: t('auth.register.weakPasswordDesc'), type: 'error' });
                 return;
             }
         }
         if (step === 2) {
             if (!firstName || !lastName || !phone || !address || !city || !state || !zipCode) {
-                toast({ title: 'Datos faltantes', description: 'Por favor completa todos los campos de ubicación y contacto.', type: 'error' });
+                toast({ title: t('auth.register.missingDataTitle'), description: t('auth.register.locationMissingDesc'), type: 'error' });
                 return;
             }
         }
@@ -107,7 +110,7 @@ export function RegisterPage() {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!dataConsent) {
-            toast({ title: 'Atención', description: 'Debes aceptar el aviso de privacidad.', type: 'error' });
+            toast({ title: t('auth.register.attention'), description: t('auth.register.privacyConsentRequired'), type: 'error' });
             return;
         }
 
@@ -194,7 +197,7 @@ export function RegisterPage() {
 
             setRegistered(true);
         } catch (err: any) {
-            toast({ title: 'Error', description: err.message || 'No se pudo completar el registro', type: 'error' });
+            toast({ title: t('common.error'), description: err.message || t('auth.register.errorGeneric'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -208,16 +211,16 @@ export function RegisterPage() {
                         <CheckCircle2 size={40} className="text-primary" />
                     </div>
                     <div className="space-y-2">
-                        <h2 className="text-2xl font-black text-white uppercase tracking-tight">¡REGISTRO EXITOSO!</h2>
+                        <h2 className="text-2xl font-black text-white uppercase tracking-tight">{t('auth.register.successTitle').toUpperCase()}</h2>
                         <p className="text-slate-400 text-sm font-medium">
                             {role === 'TECH' 
-                                ? 'Tu perfil ha sido enviado para aprobación. Te notificaremos una vez seas activado.' 
-                                : 'Tu cuenta ha sido creada. Ya puedes iniciar sesión y agendar servicios.'}
+                                ? t('auth.register.successTechDesc') 
+                                : t('auth.register.successCustomerDesc')}
                         </p>
                     </div>
                     <Link to="/auth/login" className="block w-full">
                         <Button className="w-full h-14 rounded-2xl bg-primary text-slate-950 font-bold uppercase tracking-widest hover:bg-white transition-all">
-                            INICIAR SESIÓN
+                            {t('auth.login.protocolTitle').toUpperCase()}
                         </Button>
                     </Link>
                 </Card>
@@ -227,6 +230,10 @@ export function RegisterPage() {
 
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 py-12 md:py-20 relative overflow-hidden font-sans">
+            <div className="absolute top-6 right-6 z-[100]">
+                <LanguageSelector />
+            </div>
+
             {/* Professional Background Elements */}
             <div className="absolute inset-0">
                 <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-primary/10 blur-[150px] rounded-full"></div>
@@ -244,7 +251,7 @@ export function RegisterPage() {
                     
                     <div className="space-y-4">
                         <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-none">
-                            {role === 'TECH' ? 'Únete al equipo' : 'Crear mi cuenta'}
+                            {role === 'TECH' ? t('auth.register.joinTeam') : t('auth.register.createAccount')}
                         </h1>
                         <div className="flex items-center justify-center gap-4 py-2">
                             {[1, 2, 3].map((s) => (
@@ -259,10 +266,10 @@ export function RegisterPage() {
                         <div className="space-y-10">
                             {step === 1 && (
                                 <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
-                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">Paso 01 — Credenciales</h3>
+                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">{t('auth.register.step1Title')}</h3>
                                     <div className="space-y-6">
                                         <div className="space-y-3">
-                                            <label className="text-xs font-bold text-slate-400 tracking-wide ml-2">Correo Electrónico</label>
+                                            <label className="text-xs font-bold text-slate-400 tracking-wide ml-2">{t('auth.login.userId')}</label>
                                             <div className="relative">
                                                 <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500">
                                                     <Mail size={20} />
@@ -271,7 +278,7 @@ export function RegisterPage() {
                                             </div>
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-xs font-bold text-slate-400 tracking-wide ml-2">Contraseña</label>
+                                            <label className="text-xs font-bold text-slate-400 tracking-wide ml-2">{t('auth.login.accessCode')}</label>
                                             <div className="relative">
                                                 <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500">
                                                     <Lock size={20} />
@@ -288,7 +295,7 @@ export function RegisterPage() {
 
                             {step === 2 && (
                                 <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
-                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">Paso 02 — Información Personal</h3>
+                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">{t('auth.register.step2Title')}</h3>
                                     <div className="space-y-8">
                                         {role === 'TECH' && (
                                             <div className="flex flex-col items-center gap-6 bg-white/5 p-8 rounded-[2.5rem] border border-white/10">
@@ -298,31 +305,31 @@ export function RegisterPage() {
                                                         <Camera size={24} className="text-white" />
                                                     </div>
                                                 </button>
-                                                <span className="text-xs font-bold text-slate-400">Subir foto de perfil</span>
+                                                <span className="text-xs font-bold text-slate-400">{t('auth.register.uploadProfilePhoto')}</span>
                                                 <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
                                             </div>
                                         )}
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <Input label="Nombre" placeholder="Tu nombre" required value={firstName} onChange={(e) => setFirstName(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
-                                            <Input label="Apellido" placeholder="Tu apellido" required value={lastName} onChange={(e) => setLastName(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
+                                            <Input label={t('auth.register.firstName')} placeholder="Tu nombre" required value={firstName} onChange={(e) => setFirstName(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
+                                            <Input label={t('auth.register.lastName')} placeholder="Tu apellido" required value={lastName} onChange={(e) => setLastName(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
                                         </div>
-                                        <Input label="Teléfono de Contacto" type="tel" placeholder="(303) 000-0000" required value={phone} onChange={(e) => setPhone(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
+                                        <Input label={t('auth.register.phone')} type="tel" placeholder="(303) 000-0000" required value={phone} onChange={(e) => setPhone(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
                                         <div className="space-y-4">
-                                            <Input label="Dirección de Residencial" placeholder="Ej: 123 Street Ave" required value={address} onChange={(e) => setAddress(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
+                                            <Input label={t('auth.register.address')} placeholder="Ej: 123 Street Ave" required value={address} onChange={(e) => setAddress(e.target.value)} className="h-11 rounded-xl bg-white/5 border-white/10" />
                                             <div className="grid grid-cols-3 gap-3">
-                                                <Input label="Ciudad" placeholder="Denver" required value={city} onChange={(e) => setCity(e.target.value)} className="h-11 rounded-xl" />
-                                                <Input label="Estado" placeholder="CO" required value={state} onChange={(e) => setState(e.target.value)} className="h-11 rounded-xl" />
-                                                <Input label="ZIP" placeholder="80202" required value={zipCode} onChange={(e) => setZipCode(e.target.value)} className="h-11 rounded-xl" />
+                                                <Input label={t('auth.register.city')} placeholder="Denver" required value={city} onChange={(e) => setCity(e.target.value)} className="h-11 rounded-xl" />
+                                                <Input label={t('auth.register.state')} placeholder="CO" required value={state} onChange={(e) => setState(e.target.value)} className="h-11 rounded-xl" />
+                                                <Input label={t('auth.register.zip')} placeholder="80202" required value={zipCode} onChange={(e) => setZipCode(e.target.value)} className="h-11 rounded-xl" />
                                             </div>
                                         </div>
-                                        <Input label="Fecha de Nacimiento" type="date" required value={dob} onChange={(e) => setDob(e.target.value)} className="h-11 rounded-xl [color-scheme:dark]" />
+                                        <Input label={t('auth.register.birthDate')} type="date" required value={dob} onChange={(e) => setDob(e.target.value)} className="h-11 rounded-xl [color-scheme:dark]" />
                                     </div>
                                 </div>
                             )}
 
                             {step === 3 && (
                                 <div className="space-y-10 animate-in slide-in-from-right-10 duration-500">
-                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">Paso 03 — Detalles Operativos</h3>
+                                    <h3 className="text-sm font-bold text-primary tracking-widest uppercase italic">{t('auth.register.step3Title')}</h3>
                                     
                                     {role === 'TECH' && (
                                         <div className="space-y-8">
@@ -331,27 +338,27 @@ export function RegisterPage() {
                                                     <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
                                                         <Car size={22} />
                                                     </div>
-                                                    <h4 className="text-sm font-bold text-white tracking-wide">Información del Vehículo</h4>
+                                                    <h4 className="text-sm font-bold text-white tracking-wide">{t('auth.register.vehicleInfo')}</h4>
                                                 </div>
                                                 <div className="flex justify-center">
                                                     <button type="button" onClick={() => vehiclePhotoInputRef.current?.click()} className="relative w-full h-40 rounded-[2rem] overflow-hidden border-2 border-dashed border-white/10 bg-slate-900 group hover:border-primary transition-all">
-                                                        {vehiclePhotoPreview ? <img src={vehiclePhotoPreview} alt="Auto" className="w-full h-full object-cover" /> : <div className="flex flex-col items-center gap-2 text-slate-500"><Camera size={32} /><span className="text-xs font-bold">Foto del Vehículo</span></div>}
+                                                        {vehiclePhotoPreview ? <img src={vehiclePhotoPreview} alt="Auto" className="w-full h-full object-cover" /> : <div className="flex flex-col items-center gap-2 text-slate-500"><Camera size={32} /><span className="text-xs font-bold">{t('auth.register.vehiclePhoto')}</span></div>}
                                                     </button>
                                                     <input ref={vehiclePhotoInputRef} type="file" accept="image/*" className="hidden" onChange={handleVehiclePhotoChange} />
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-6">
-                                                    <Input label="Placa" placeholder="ABC-123" required value={techVehiclePlate} onChange={(e) => setTechVehiclePlate(e.target.value.toUpperCase())} className="h-14 rounded-xl" />
-                                                    <Input label="Color" placeholder="Ej: Plateado" required value={techVehicleColor} onChange={(e) => setTechVehicleColor(e.target.value)} className="h-14 rounded-xl" />
+                                                    <Input label={t('auth.register.plate')} placeholder="ABC-123" required value={techVehiclePlate} onChange={(e) => setTechVehiclePlate(e.target.value.toUpperCase())} className="h-14 rounded-xl" />
+                                                    <Input label={t('auth.register.color')} placeholder="Ej: Plateado" required value={techVehicleColor} onChange={(e) => setTechVehicleColor(e.target.value)} className="h-14 rounded-xl" />
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-6">
-                                                    <Input label="Marca" placeholder="Ej: Toyota" required value={techVehicleMake} onChange={(e) => setTechVehicleMake(e.target.value)} className="h-14 rounded-xl" />
-                                                    <Input label="Modelo" placeholder="Ej: Tacoma" required value={techVehicleModel} onChange={(e) => setTechVehicleModel(e.target.value)} className="h-14 rounded-xl" />
+                                                    <Input label={t('auth.register.make')} placeholder="Ej: Toyota" required value={techVehicleMake} onChange={(e) => setTechVehicleMake(e.target.value)} className="h-14 rounded-xl" />
+                                                    <Input label={t('auth.register.model')} placeholder="Ej: Tacoma" required value={techVehicleModel} onChange={(e) => setTechVehicleModel(e.target.value)} className="h-14 rounded-xl" />
                                                 </div>
                                             </div>
 
                                             <div className="space-y-4">
                                                 <div className="space-y-3">
-                                                    <label className="text-xs font-bold text-slate-400 ml-2">Especialidades Técnicas</label>
+                                                    <label className="text-xs font-bold text-slate-400 ml-2">{t('auth.register.technicalSpecialties')}</label>
                                                     <textarea value={experience} onChange={(e) => setExperience(e.target.value)} placeholder="Ej: Especialista en sistemas de frenado ..." className="w-full p-6 rounded-[2rem] bg-white/5 border border-white/10 text-white font-medium text-base focus:border-primary outline-none min-h-[120px] transition-all" />
                                                 </div>
                                                 <label className="flex items-center gap-6 p-6 bg-white/5 rounded-[2rem] border border-white/10 cursor-pointer group hover:bg-white/10 transition-all">
@@ -360,8 +367,8 @@ export function RegisterPage() {
                                                         <ShieldCheck className="absolute h-5 w-5 left-1 text-slate-950 opacity-0 peer-checked:opacity-100 transition-opacity" />
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-white tracking-wide">Autorización de Trabajo</p>
-                                                        <p className="text-xs text-slate-500 font-medium italic">Confirmo estatus legal en EE. UU.</p>
+                                                        <p className="text-sm font-bold text-white tracking-wide">{t('auth.register.workAuth')}</p>
+                                                        <p className="text-xs text-slate-500 font-medium italic">{t('auth.register.legalStatusConfirm')}</p>
                                                     </div>
                                                 </label>
                                             </div>
@@ -375,8 +382,8 @@ export function RegisterPage() {
                                                 <ShieldCheck className="absolute h-5 w-5 left-1 text-slate-950 opacity-0 peer-checked:opacity-100 transition-opacity" />
                                             </div>
                                             <div className="space-y-2">
-                                                <p className="text-sm font-bold text-white tracking-wide">Aviso de Privacidad</p>
-                                                <p className="text-sm text-slate-400 font-medium leading-relaxed group-hover:text-white transition-colors">Acepto el tratamiento de mis datos personales según los términos de servicio.</p>
+                                                <p className="text-sm font-bold text-white tracking-wide">{t('auth.register.privacyTitle')}</p>
+                                                <p className="text-sm text-slate-400 font-medium leading-relaxed group-hover:text-white transition-colors">{t('auth.register.privacyAccept')}</p>
                                             </div>
                                         </label>
                                     </div>
@@ -386,7 +393,7 @@ export function RegisterPage() {
                             <div className="flex gap-6 pt-8">
                                 {step > 1 && (
                                     <Button variant="outline" className="flex-1 h-16 rounded-[1.5rem] border-white/10 text-white hover:bg-white/5 font-bold tracking-widest text-xs" onClick={prevStep}>
-                                        <ArrowLeft size={18} className="mr-3" /> ATRÁS
+                                        <ArrowLeft size={18} className="mr-3" /> {t('common.back').toUpperCase()}
                                     </Button>
                                 )}
                                 
@@ -396,9 +403,9 @@ export function RegisterPage() {
                                     loading={loading}
                                 >
                                     {((role === 'TECH' && step < 3) || (role === 'CUSTOMER' && step < 2)) ? (
-                                        <>Continuar <ChevronRight size={20} className="ml-2 group-hover:translate-x-2 transition-transform" /></>
+                                        <>{t('common.continue')} <ChevronRight size={20} className="ml-2 group-hover:translate-x-2 transition-transform" /></>
                                     ) : (
-                                        loading ? 'Registrando...' : 'Finalizar Registro'
+                                        loading ? t('auth.register.registering') : t('auth.register.finishRegistration')
                                     )}
                                 </Button>
                             </div>
@@ -408,16 +415,16 @@ export function RegisterPage() {
 
                 <div className="text-center space-y-8">
                     <p className="text-sm font-medium text-slate-500">
-                        ¿Ya tienes una cuenta? <Link to="/auth/login" className="text-primary hover:text-white font-bold underline underline-offset-8 ml-2 transition-colors">Ingresar ahora</Link>
+                        {t('auth.register.alreadyHaveAccount')} <Link to="/auth/login" className="text-primary hover:text-white font-bold underline underline-offset-8 ml-2 transition-colors">{t('auth.login.title')}</Link>
                     </p>
                     <Link to="/" className="inline-flex items-center gap-3 text-sm font-bold text-slate-600 hover:text-white transition-all group/back">
-                        <ArrowLeft size={18} className="group-hover/back:-translate-x-2 transition-transform" /> Regresar al inicio
+                        <ArrowLeft size={18} className="group-hover/back:-translate-x-2 transition-transform" /> {t('common.backToHome')}
                     </Link>
                 </div>
             </div>
 
             <div className="absolute bottom-10 text-center w-full">
-                <p className="text-[10px] font-bold text-slate-800 uppercase tracking-[0.6em]">Denver Mobile Auto Care — © 2026</p>
+                <p className="text-[10px] font-bold text-slate-800 uppercase tracking-[0.6em]">{t('common.copyright')}</p>
             </div>
         </div>
     );
